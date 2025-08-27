@@ -185,34 +185,65 @@ Monto a retirar: ${moneyFormat(monto)}`;
       if (out) { out.value = link; out.select(); document.execCommand("copy"); toast("Link generado"); }
     });
   }
-  // ---- Age Gate 18+ ----
-(function ageGate(){
-  const C = window.VEGASBETT_CONFIG || {};
-  if (!C.AGE_GATE_ENABLED) return;
-  if (localStorage.getItem('AGE_OK') === '1') return;
+    // ---- Age Gate 18+ ----
+  (function ageGate(){
+    const C = window.VEGASBETT_CONFIG || {};
+    if (!C.AGE_GATE_ENABLED) return;
+    if (localStorage.getItem('AGE_OK') === '1') return;
 
-  const minAge = C.EDAD_MINIMA || 18;
+    const minAge = C.EDAD_MINIMA || 18;
 
-  const backdrop = document.createElement('div');
-  backdrop.className = 'age-backdrop';
-  backdrop.innerHTML = `
-    <div class="age-modal">
-      <h3>Confirmación de edad <span class="age-badge">${minAge}+</span></h3>
-      <p>Para continuar, confirmá que sos mayor de ${minAge} años. Jugá responsable.</p>
-      <div class="age-actions">
-        <button id="ageYes" class="btn ok">Sí, soy mayor</button>
-        <button id="ageNo" class="btn warn">No, salir</button>
+    const backdrop = document.createElement('div');
+    backdrop.className = 'age-backdrop';
+    backdrop.innerHTML = `
+      <div class="age-modal">
+        <h3>Confirmación de edad <span class="age-badge">${minAge}+</span></h3>
+        <p>Para continuar, confirmá que sos mayor de ${minAge} años. Jugá responsable.</p>
+        <div class="age-actions">
+          <button id="ageYes" class="btn ok">Sí, soy mayor</button>
+          <button id="ageNo" class="btn warn">No, salir</button>
+        </div>
       </div>
-    </div>
-  `;
-  document.body.appendChild(backdrop);
+    `;
+    document.body.appendChild(backdrop);
 
-  document.getElementById('ageYes')?.addEventListener('click', () => {
-    localStorage.setItem('AGE_OK', '1');
-    backdrop.remove();
-  });
-  document.getElementById('ageNo')?.addEventListener('click', () => {
-    window.location.href = 'https://www.google.com';
-  });
-})();
+    document.getElementById('ageYes')?.addEventListener('click', () => {
+      localStorage.setItem('AGE_OK', '1');
+      backdrop.remove();
+    });
+    document.getElementById('ageNo')?.addEventListener('click', () => {
+      window.location.href = 'https://www.google.com';
+    });
+  })();
+
+  // ===== Modal "Más info" (spech) =====
+  (function(){
+    const modal   = document.getElementById('modalInfo');
+    const btnOpen = document.getElementById('btnMasInfo');
+    const btnClose= document.getElementById('modalClose');
+    const btnOk   = document.getElementById('modalOk');
+    const btnCopy = document.getElementById('copySpech');
+    const spech   = document.getElementById('spechText');
+
+    if (!modal || !btnOpen) return;
+
+    const open  = ()=> { modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); };
+    const close = ()=> { modal.classList.add('hidden');   modal.setAttribute('aria-hidden','true');  };
+
+    btnOpen.addEventListener('click', open);
+    btnClose?.addEventListener('click', close);
+    btnOk?.addEventListener('click', close);
+    modal.querySelector('.vb-modal__backdrop')?.addEventListener('click', e=>{
+      if (e.target.dataset.close) close();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+
+    btnCopy?.addEventListener('click', ()=>{
+      const txt = spech?.innerText || '';
+      (navigator.clipboard?.writeText(txt) || Promise.reject()).then(
+        ()=> toast('Texto copiado ✅'),
+        ()=> { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Texto copiado ✅'); }
+      );
+    });
+  })();
 })();

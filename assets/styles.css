@@ -127,6 +127,40 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
 @media (max-width: 640px){
   :root { --logo-size: 110px; }
 }
+/* Leyenda dorada principal */
+.gold-legend{
+  color: var(--gold);
+  font-weight: 600;
+  margin: 6px auto 10px;
+  max-width: 900px;
+  line-height: 1.25;
+}
+.gold-legend .gold-promo{
+  display: inline-block;
+  margin-left: 6px;
+  font-weight: 700;
+}
+
+/* Nuevos botones */
+.btn.bonus{
+  background: linear-gradient(180deg, rgba(215,183,110,.28), rgba(215,183,110,.12));
+  border-color: rgba(215,183,110,.45);
+}
+.btn.external{
+  background: linear-gradient(180deg, rgba(91,45,130,.20), rgba(91,45,130,.08));
+  border-color: rgba(91,45,130,.35);
+}
+
+/* Logo chico (ajustá el tamaño desde esta variable) */
+:root { --logo-size: 140px; }  /* probá 120/140/160 */
+.logo-hero{
+  display:flex; justify-content:center; margin: 10px 0 6px;
+}
+.logo-hero .logo-img{
+  width: var(--logo-size); height:auto; border-radius:12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35); display:block;
+}
+
 
 /* por si hace falta compactar espacio cuando va abajo de los botones */
 .logo-hero.logo-bottom { margin: 10px 0 0; }

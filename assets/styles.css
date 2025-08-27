@@ -267,6 +267,56 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
   content:""; position:absolute; left:0; right:0; top:-8px;
   height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
 }
+/* ==== OVERRIDE PALETA: Carbon Obsidian (dorado protagonista) ==== */
+:root{
+  --bg:#0b0c10;
+  --card:#15161b;
+  --violeta:#2e2f38;
+  --violeta2:#454652;
+  --gold:#d7b76e;
+  --text:#f3f3f4;
+  --muted:#b9bcc6;
+}
+
+/* 1) Fondo base: saca el gradiente violeta anterior */
+body{
+  background: radial-gradient(1000px 700px at 25% -10%, #2b2c33 0%, #0b0c10 60%) no-repeat fixed !important;
+}
+
+/* 2) Fondo difuminado: pasa a gris/negro */
+.bg-blur{ filter: blur(16px) brightness(0.5) saturate(1.0) !important; }
+.bg-blur::after{
+  background: radial-gradient(1000px 700px at 25% -10%, rgba(70,70,80,.35), rgba(10,10,14,.82)) !important;
+}
+
+/* 3) Tarjeta: glass en gris, sin tinte púrpura */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card) !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+/* 4) Componentes que aún tenían morado */
+.btn.secondary{
+  background: linear-gradient(180deg, rgba(46,47,56,.28), rgba(46,47,56,.12)) !important;
+  border-color: rgba(46,47,56,.40) !important;
+}
+.badge{
+  background: rgba(46,47,56,.25) !important;
+  border-color: rgba(46,47,56,.5) !important;
+}
+
+/* Admin panel y botones “oscuros” */
+.admin-panel{ background:#16171c !important; border-color: rgba(255,255,255,.12) !important; }
+.copybtn, .toast{ background:#17181d !important; border-color: rgba(255,255,255,.16) !important; }
+
+/* Botón externo en tono neutro (no violeta) */
+.btn.external{
+  background: linear-gradient(180deg, rgba(46,47,56,.20), rgba(46,47,56,.08)) !important;
+  border-color: rgba(46,47,56,.35) !important;
+}
+
+/* Inputs con fondo gris carbón (no púrpura) */
+.form input{ background:#0f1116 !important; }
 
 
 

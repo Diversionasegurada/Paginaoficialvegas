@@ -186,5 +186,61 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
   background: rgba(215,183,110,.15); border: 1px solid rgba(215,183,110,.35); color: var(--gold);
   font-size: 12px; margin-left: 6px;
 }
+/* --- Mejora estética “pro” --- */
+
+/* Dorado real en la leyenda */
+.gold-legend strong, .gold-legend .gold-promo{
+  background: linear-gradient(180deg,#fff3c4 0%, #e8cf87 35%, #d7b76e 55%, #b88f3a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.25));
+}
+
+/* Íconos en botones (data-ico) */
+.btn{ position:relative; overflow:hidden; min-height:56px; }
+.btn[data-ico]::before{
+  content: attr(data-ico);
+  position:relative; margin-right:10px; font-size:1.05rem; top:1px; opacity:.9;
+}
+
+/* Micro-interacciones */
+.btn:hover{ transform: translateY(-1px); box-shadow:0 10px 26px rgba(0,0,0,.38) }
+.btn:active{ transform: translateY(0); box-shadow:0 6px 18px rgba(0,0,0,.35) }
+.btn:focus-visible{ outline:2px solid rgba(215,183,110,.65); outline-offset:2px }
+
+/* “Shine” sutil en el botón de bono */
+.btn.bonus{ position:relative; }
+.btn.bonus::after{
+  content:""; position:absolute; inset:-40% -120% auto auto;
+  width:40%; height:200%; transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.28) 50%, transparent 100%);
+  animation: vb-shine 2.8s linear infinite; pointer-events:none;
+}
+@keyframes vb-shine{ 0%{transform:translateX(-120%) rotate(25deg)} 100%{transform:translateX(220%) rotate(25deg)} }
+
+/* Cartita con más “glass” */
+.card{
+  background: radial-gradient(180% 160% at 50% -20%, rgba(255,255,255,.05), transparent 40%) ,
+              rgba(24,16,38,.86);
+  border:1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(2px) saturate(1.08);
+}
+
+/* Título un toque más compacto en desktop */
+@media (min-width: 860px){
+  h1.center{ letter-spacing:-.5px }
+}
+
+/* Logo más discreto (si lo usás arriba) */
+:root{ --logo-size: 120px; } /* probá 110–140px */
+.logo-hero{ margin:8px 0 2px }
+
+/* Separación más pareja debajo de la leyenda */
+.gold-legend{ margin:8px auto 12px }
+
+/* En móvil, botones un pelín más bajos */
+@media (max-width:640px){
+  .btn{ min-height:52px; }
+}
+
 
 

@@ -96,4 +96,24 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
   object-fit: contain;    /* clave: mostrar entera */
   display: block;
 }
+/* ---- Logo chico arriba de los botones ---- */
+:root { --logo-size: 220px; }  /* cambiá a 180/200/260 si querés */
+
+.logo-hero{
+  display:flex;
+  justify-content:center;
+  margin: 10px 0 4px;
+}
+
+.logo-hero .logo-img{
+  width: var(--logo-size);
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  display:block;
+}
+
+/* Desactivar estilos viejos de portada para que no molesten */
+.hero, .hero .portada, .portada-frame, .portada-frame img { display:none !important; }
+
 

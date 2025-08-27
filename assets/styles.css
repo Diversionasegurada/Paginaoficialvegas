@@ -241,6 +241,29 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
 @media (max-width:640px){
   .btn{ min-height:52px; }
 }
+/* Fila de acciones destacadas */
+.featured-actions{
+  display:flex; gap:12px; justify-content:center;
+  margin: 10px auto 12px; max-width: 920px;
+}
+.featured-actions .btn{
+  min-height: 56px;
+  padding: 12px 18px;
+  font-weight: 700;
+}
+/* En móvil, que se apilen */
+@media (max-width: 680px){
+  .featured-actions{ flex-direction:column; }
+}
+
+/* (Opcional) marquito sutil para separar visualmente */
+.featured-actions{
+  position: relative;
+}
+.featured-actions::before{
+  content:""; position:absolute; left:0; right:0; top:-8px;
+  height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+}
 
 
 

@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VegasBett — Centro de Atención</title>
 
+  <!-- Rutas relativas -->
   <link rel="stylesheet" href="assets/styles.css"/>
   <script src="assets/config.js"></script>
   <script defer src="assets/app.js"></script>
 
+  <!-- head dinámico (noindex y OG) -->
   <script>
   (function(){
     const C = window.VEGASBETT_CONFIG || {};
@@ -29,6 +31,7 @@
   })();
   </script>
 
+  <!-- Pixel (opcional, controlado por config) -->
   <script>
   (function(){
     var C=window.VEGASBETT_CONFIG||{}; if(!C.TRACKING_ENABLED) return;
@@ -51,8 +54,13 @@
         <span class="badge-pill badge-admin" id="adminToggle" title="Panel rápido">Admin</span>
       </div>
 
+      <!-- PORTADA -->
+      <div class="hero">
+        <img src="assets/portada_paginaweb.png" alt="Portada VegasBett" class="portada">
+      </div>
+
       <h1 class="center">¿Qué necesitás hacer hoy?</h1>
-      <p class="center sub">Uso interno — no indexado.</p>
+      <p class="center sub">Uso interno.</p>
 
       <div class="grid">
         <button class="btn ok" id="btnPrincipal">Número principal (WhatsApp)</button>
@@ -78,7 +86,7 @@
       </div>
 
       <footer class="center">
-        Uso interno — no indexado. © <span id="year"></span> VegasBett • Jugá responsable.
+        © <span id="year"></span> VegasBett • Jugá responsable.
       </footer>
     </div>
   </div>

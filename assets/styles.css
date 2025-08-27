@@ -164,5 +164,27 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
 
 /* por si hace falta compactar espacio cuando va abajo de los botones */
 .logo-hero.logo-bottom { margin: 10px 0 0; }
+/* ---- Age Gate 18+ ---- */
+.age-backdrop{
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+}
+.age-modal{
+  width: min(520px, 92vw);
+  background: rgba(24,16,38,0.95);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px; padding: 18px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+.age-modal h3{ margin: 0 0 8px; }
+.age-modal p{ color: var(--muted); margin: 6px 0 12px; }
+.age-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.age-actions .btn{ flex:1 }
+.age-badge{ display:inline-block; padding:2px 8px; border-radius:999px;
+  background: rgba(215,183,110,.15); border: 1px solid rgba(215,183,110,.35); color: var(--gold);
+  font-size: 12px; margin-left: 6px;
+}
 
 

@@ -115,5 +115,20 @@ footer{margin-top:12px; color:var(--muted); font-size:12px}
 
 /* Desactivar estilos viejos de portada para que no molesten */
 .hero, .hero .portada, .portada-frame, .portada-frame img { display:none !important; }
+/* Tamaño base (desktop) */
+:root { --logo-size: 150px; }
+
+/* tablets */
+@media (max-width: 900px){
+  :root { --logo-size: 130px; }
+}
+
+/* celulares */
+@media (max-width: 640px){
+  :root { --logo-size: 110px; }
+}
+
+/* por si hace falta compactar espacio cuando va abajo de los botones */
+.logo-hero.logo-bottom { margin: 10px 0 0; }
 
 

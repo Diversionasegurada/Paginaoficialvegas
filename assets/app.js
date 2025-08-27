@@ -67,7 +67,19 @@ Gracias.`;
       location.href = waUrl(CFG.NUMERO_RESPALDO, text);
     });
   }
-
+// Soy nuevo (bono 35%) -> WhatsApp al principal
+if (document.querySelector('#btnSoyNuevo')) {
+  document.querySelector('#btnSoyNuevo').addEventListener('click', () => {
+    const CFG = window.VEGASBETT_CONFIG || {};
+    const texto = "Soy nuevo, quiero mi bono del 35%";
+    if (typeof fbq === "function") { fbq("track", "Contact", { flow: "bono_nuevo" }); }
+    const msg = encodeURIComponent(texto);
+    const url = CFG.NUMERO_PRINCIPAL
+      ? `https://wa.me/${CFG.NUMERO_PRINCIPAL}?text=${msg}`
+      : `https://wa.me/?text=${msg}`;
+    location.href = url;
+  });
+}
   // CARGAR -----------------------------
   if ($("#formCargar")) {
     const form  = $("#formCargar");

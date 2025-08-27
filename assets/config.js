@@ -1,5 +1,7 @@
 // Configuración central — VegasBett (privado) — actualizado 2025-08-27 00:36
 window.VEGASBETT_CONFIG = {
+AGE_GATE_ENABLED: true,
+EDAD_MINIMA: 18,
   MARCA: "VegasBett",
   // Números (sin + ni espacios)
   NUMERO_PRINCIPAL: "5492233415879",

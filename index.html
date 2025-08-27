@@ -113,6 +113,55 @@
       <footer class="center">
         © <span id="year"></span> VegasBett • Jugá responsable • + 18 años.
       </footer>
+       <!-- ⬇️ PEGAR EL MODAL ACÁ, justo antes de cerrar la .card -->
+      <!-- Modal: Más info / Spech -->
+      <div id="modalInfo" class="vb-modal hidden" aria-hidden="true" role="dialog" aria-labelledby="modalInfoTitle">
+        <div class="vb-modal__backdrop" data-close="1"></div>
+        <div class="vb-modal__card">
+          <div class="vb-modal__head">
+            <h3 id="modalInfoTitle">Bono de Bienvenida 35%</h3>
+            <button class="vb-modal__close" id="modalClose" aria-label="Cerrar">✕</button>
+          </div>
+          <div class="vb-modal__body">
+            <p class="small" style="margin-top:-6px">
+              *Válido en la <strong>primera</strong> carga, con un mínimo de <strong>$500</strong> (ARS).
+            </p>
+            <pre id="spechText" class="vb-pre">
+🎰 ¡BIENVENID@ A VEGASBETT! 🎰
+💥 Estás a punto de entrar al lugar donde TODO puede pasar...
+🔥 BONO EXCLUSIVO del +35% en tu primera recarga 💸
+
+🎯 ¿Estás list@ para empezar con ventaja?
+Esto es lo que te espera:
+
+🟣 Slots explosivos con premios que crecen minuto a minuto
+🟡 Casino en vivo 24/7 con crupiers reales
+💸 Cargas desde $ 500 y retiros instantáneos
+📈 Hasta $250.000 por día – sin vueltas, sin excusas
+
+📝 Decime tu nombre o apodo y te creo la cuenta en segundos
+
+🔐 Plataforma 100% segura, verificada y con atención personalizada (Ganamos.io)
+🍀 Hoy es el día. Hoy puede ser tu primera GRAN jugada.
+
+🔥 ¡Respondé este mensaje y activá tu lugar en la mesa!
+🎉 VegasBett te espera… con los dados cargados a tu favor 🎲💰
+            </pre>
+          </div>
+          <div class="vb-modal__foot">
+            <button class="btn secondary" id="copySpech" data-ico="📋">Copiar texto</button>
+            <button class="btn ok" id="modalOk" data-ico="✅">Entendido</button>
+          </div>
+        </div>
+      </div>
+      <!-- ⬆️ ACÁ TERMINA EL MODAL -->
+
+    </div> <!-- cierre .card -->
+  </div>   <!-- cierre .container -->
+
+  <div id="toast" class="toast">Copiado</div>
+</body>
+</html>
     </div>
   </div>
   <div id="toast" class="toast">Copiado</div>

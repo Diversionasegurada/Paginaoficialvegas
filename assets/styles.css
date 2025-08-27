@@ -1,14 +1,17 @@
 /* VegasBett estilos */
 :root{
-  --bg:#0d0914;
-  --card:#181026;
-  --violeta:#5b2d82;
-  --violeta2:#7a3db1;
+  --bg:#0b0c10;
+  --card:#15161b;
+  --violeta:#2e2f38;     /* ahora es un gris frío */
+  --violeta2:#454652;
   --gold:#d7b76e;
-  --text:#f5f5f7;
-  --muted:#b9a9cf;
+  --text:#f3f3f4;
+  --muted:#b9bcc6;
   --ok:#2e7d32;
   --warn:#8a2b2b;
+}
+.bg-blur::after{
+  background: radial-gradient(1000px 700px at 25% -10%, rgba(70,70,80,.35), rgba(10,10,14,.82));
 }
 *{box-sizing:border-box}
 body{

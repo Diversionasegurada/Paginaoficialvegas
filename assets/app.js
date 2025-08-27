@@ -185,4 +185,34 @@ Monto a retirar: ${moneyFormat(monto)}`;
       if (out) { out.value = link; out.select(); document.execCommand("copy"); toast("Link generado"); }
     });
   }
+  // ---- Age Gate 18+ ----
+(function ageGate(){
+  const C = window.VEGASBETT_CONFIG || {};
+  if (!C.AGE_GATE_ENABLED) return;
+  if (localStorage.getItem('AGE_OK') === '1') return;
+
+  const minAge = C.EDAD_MINIMA || 18;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'age-backdrop';
+  backdrop.innerHTML = `
+    <div class="age-modal">
+      <h3>Confirmación de edad <span class="age-badge">${minAge}+</span></h3>
+      <p>Para continuar, confirmá que sos mayor de ${minAge} años. Jugá responsable.</p>
+      <div class="age-actions">
+        <button id="ageYes" class="btn ok">Sí, soy mayor</button>
+        <button id="ageNo" class="btn warn">No, salir</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  document.getElementById('ageYes')?.addEventListener('click', () => {
+    localStorage.setItem('AGE_OK', '1');
+    backdrop.remove();
+  });
+  document.getElementById('ageNo')?.addEventListener('click', () => {
+    window.location.href = 'https://www.google.com';
+  });
+})();
 })();

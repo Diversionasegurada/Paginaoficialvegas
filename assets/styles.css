@@ -1,335 +1,174 @@
-/* VegasBett estilos */
 :root{
-  --bg:#0b0c10;
-  --card:#15161b;
-  --violeta:#2e2f38;     /* ahora es un gris frío */
-  --violeta2:#454652;
-  --gold:#d7b76e;
-  --text:#f3f3f4;
-  --muted:#b9bcc6;
+  --bg:#0a0b0f;
+  --card:#13141b;
+  --violeta:#2f3240;
+  --violeta2:#42465a;
+  --gold:#e0c178;
+  --text:#f3f4f6;
+  --muted:#b6bac7;
   --ok:#2e7d32;
   --warn:#8a2b2b;
 }
-.bg-blur::after{
-  background: radial-gradient(1000px 700px at 25% -10%, rgba(70,70,80,.35), rgba(10,10,14,.82));
-}
+
 *{box-sizing:border-box}
+html,body{background:#0a0b0f}
 body{
-  margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-  background: radial-gradient(1200px 800px at 20% -10%, #2b1a41 0%, #0d0914 55%) no-repeat fixed;
-  color:var(--text);
+  margin:0; color:var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(255,255,255,.04), transparent 55%) no-repeat fixed,
+    linear-gradient(180deg,#0a0b0f,#0a0b0f);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
+
 .container{min-height:100vh; display:grid; place-items:center; padding:22px}
 .card{
-  width:min(940px, 94vw); background:linear-gradient(180deg, rgba(255,255,255,0.04), transparent),
-  var(--card); border:1px solid rgba(255,255,255,0.06); border-radius:22px; padding:18px 18px 12px;
-  box-shadow:0 12px 50px rgba(0,0,0,0.35);
+  width:min(960px, 95vw);
+  background:
+    radial-gradient(180% 140% at 50% -30%, rgba(255,255,255,.05), transparent 45%),
+    rgba(19,20,27,.88);
+  border:1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(2px) saturate(1.05);
+  padding:22px 20px 16px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+  border-radius:22px;
 }
+
 .header{display:flex; justify-content:space-between; align-items:center; gap:10px}
 .brand{display:flex; align-items:center; gap:10px; font-weight:700}
-.badge{background:rgba(123,74,168,.25); border:1px solid rgba(123,74,168,.5); color:#fff; padding:4px 10px; border-radius:999px; font-size:12px}
+.badge{background:rgba(66,70,90,.25); border:1px solid rgba(66,70,90,.5); color:#fff; padding:4px 10px; border-radius:999px; font-size:12px}
 .badge-pill{padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.18); cursor:pointer; user-select:none}
-.badge-admin{background:rgba(215,183,110,.1); border-color:rgba(215,183,110,.4)}
+.badge-admin{background:rgba(224,193,120,.10); border-color:rgba(224,193,120,.4)}
+
 .center{text-align:center}
 .sub{color:var(--muted); margin-top:4px}
-.grid{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; margin:16px 0 6px}
-@media (max-width:620px){.grid{grid-template-columns:1fr}}
-.btn{
-  display:inline-block; text-align:center; padding:12px 14px; border-radius:14px; border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  color:var(--text); text-decoration:none; font-weight:600; cursor:pointer; transition:.15s;
-}
-.btn:hover{transform:translateY(-1px); box-shadow:0 6px 22px rgba(0,0,0,.35)}
-.btn.ok{background:linear-gradient(180deg, rgba(46,125,50,.25), rgba(46,125,50,.15)); border-color:rgba(46,125,50,.35)}
-.btn.warn{background:linear-gradient(180deg, rgba(138,43,43,.28), rgba(138,43,43,.12)); border-color:rgba(138,43,43,.4)}
-.btn.secondary{background:linear-gradient(180deg, rgba(91,45,130,.28), rgba(91,45,130,.12)); border-color:rgba(91,45,130,.4)}
 
+.logo-hero{ display:flex; justify-content:center; margin:10px 0 8px; }
+.logo-hero .logo-img{
+  max-width:160px; width:100%; height:auto; display:block;
+  border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.35);
+}
+@media (max-width:640px){ .logo-hero .logo-img{ max-width:120px } }
+
+h1.center{ margin:10px 0 4px; font-size:clamp(22px, 2.2vw + 14px, 28px); letter-spacing:-.3px; }
+
+/* Leyenda dorada */
+.gold-legend{
+  color:var(--gold); font-weight:600; margin:8px auto 12px; max-width:900px; line-height:1.25; text-align:center;
+}
+.gold-legend strong, .gold-legend .gold-promo{
+  background: linear-gradient(180deg,#fff4c9 0%, #edd693 35%, #e0c178 55%, #b78b38 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.25));
+}
+
+/* Banner promo */
+.promo-ticker{
+  display:flex; align-items:center; gap:10px;
+  padding:12px 14px; border-radius:14px;
+  background: linear-gradient(180deg, rgba(224,193,120,.16), rgba(224,193,120,.06));
+  border:1px solid rgba(224,193,120,.45);
+  text-decoration:none; color:var(--text);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 22px rgba(224,193,120,.10);
+  margin:12px auto 14px; max-width:900px; transition:.15s; cursor:pointer;
+}
+.promo-ticker:hover{ transform: translateY(-1px); box-shadow:0 14px 38px rgba(0,0,0,.42), 0 0 26px rgba(224,193,120,.14) }
+.promo-led{
+  width:10px; height:10px; border-radius:999px; flex:0 0 auto;
+  background:#ffd56a; box-shadow:0 0 12px #ffd56a, 0 0 28px rgba(255,213,106,.6);
+  animation: promoBlink 1.4s ease-in-out infinite;
+}
+.promo-cta{ margin-left:auto; font-weight:800; color:var(--gold); letter-spacing:.2px }
+@keyframes promoBlink{ 0%,100%{ opacity:1 } 50%{ opacity:.45 } }
+.hidden{ display:none }
+
+/* Acciones destacadas */
+.featured-actions{
+  display:flex; gap:12px; justify-content:center;
+  margin:10px auto 12px; max-width:920px; position:relative;
+}
+.featured-actions::before{
+  content:""; position:absolute; left:0; right:0; top:-8px; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+}
+
+/* Botones */
+a{ color:inherit; text-decoration:none }
+.btn{
+  display:flex; align-items:center; justify-content:center;
+  padding:12px 16px; border-radius:14px;
+  min-height:56px; color:var(--text);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:0 10px 26px rgba(0,0,0,.38) }
+.btn:active{ transform:translateY(0) }
+.btn:focus-visible{ outline:2px solid rgba(224,193,120,.65); outline-offset:2px }
+.btn.ok{ background: linear-gradient(180deg, rgba(46,125,50,.20), rgba(46,125,50,.10)); border-color:rgba(46,125,50,.35) }
+.btn.warn{ background: linear-gradient(180deg, rgba(138,43,43,.24), rgba(138,43,43,.10)); border-color:rgba(138,43,43,.40) }
+.btn.secondary{ background: linear-gradient(180deg, rgba(47,50,64,.28), rgba(47,50,64,.12)); border-color:rgba(255,255,255,.10) }
+.btn.bonus{ position:relative; overflow:hidden;
+  background: linear-gradient(180deg, rgba(224,193,120,.26), rgba(224,193,120,.12));
+  border-color: rgba(224,193,120,.45);
+}
+.btn.bonus::after{
+  content:""; position:absolute; inset:-40% -120% auto auto; width:40%; height:200%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.25) 50%, transparent 100%);
+  animation: vb-shine 2.8s linear infinite; pointer-events:none;
+}
+@keyframes vb-shine{ 0%{transform:translateX(-120%) rotate(25deg)} 100%{transform:translateX(220%) rotate(25deg)} }
+
+.grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0 8px }
+@media (max-width:620px){ .grid{ grid-template-columns:1fr } .btn{ min-height:52px } }
+
+/* Formularios */
 .form{display:grid; gap:12px; margin-top:10px}
 .form label{display:block; font-size:14px; color:var(--muted); margin-bottom:6px}
-.form input{width:100%; padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.16); background:#0f0a18; color:#fff}
+.form input{width:100%; padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:#0f1117; color:#fff}
+.form input:focus{ border-color: rgba(224,193,120,.55); outline:none; box-shadow:0 0 0 2px rgba(224,193,120,.20) }
 .form .cta-row{display:flex; gap:10px; flex-wrap:wrap}
 
 .copy{display:flex; gap:8px; align-items:center; margin:8px 0}
 .copy input{flex:1}
-.copybtn{padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.16); background:#120c1d; color:#fff; cursor:pointer}
+.copybtn{padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.16); background:#12131a; color:#fff; cursor:pointer}
 
-.note{background:rgba(215,183,110,.08); border:1px solid rgba(215,183,110,.3); padding:10px 12px; border-radius:12px}
+.note{background:rgba(224,193,120,.12); border:1px solid rgba(224,193,120,.35); padding:10px 12px; border-radius:12px}
 .clean{margin:6px 0 0 18px}
-.clean li{margin:2px 0}
-
 .soft{border:none; border-top:1px dashed rgba(255,255,255,.18); margin:12px 0}
 
-.admin-panel{margin-top:14px; padding:12px; border:1px solid rgba(255,255,255,.12); border-radius:16px; background:#120c1d}
+.admin-panel{margin-top:14px; padding:12px; border:1px solid rgba(255,255,255,.12); border-radius:16px; background:#12131a}
 .hidden{display:none}
 
 footer{margin-top:12px; color:var(--muted); font-size:12px}
 
-.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#120c1d; border:1px solid rgba(255,255,255,.16); padding:10px 14px; border-radius:999px; opacity:0; pointer-events:none; transition:.22s}
+.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#12131a; border:1px solid rgba(255,255,255,.16); padding:10px 14px; border-radius:999px; opacity:0; pointer-events:none; transition:.22s; box-shadow:0 12px 28px rgba(0,0,0,.45)}
 .toast.show{opacity:1}
-.hero .portada{
-  width: 100% !important;
-  max-height: 220px !important;
-  object-fit: cover !important;
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-}
-/* --- Portada con tamaño fijo sin recorte --- */
-.hero { text-align: center; margin: 16px 0 8px; }
 
-/* Tamaño del marco (ajustá ancho/alto a gusto) */
-.portada-frame{
-  width: 680px;           /* ancho deseado en desktop */
-  max-width: 92vw;        /* que no desborde en móvil */
-  height: 260px;          /* alto “banner” sin recortar la imagen */
-  margin: 0 auto 12px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.03); /* leve fondo/borde */
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;       /* por si la imagen tiene bordes raros */
-}
-
-/* La imagen se ajusta al marco COMPLETA (sin recortar) */
-.portada-frame img{
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;    /* clave: mostrar entera */
-  display: block;
-}
-/* ---- Logo chico arriba de los botones ---- */
-:root { --logo-size: 220px; }  /* cambiá a 180/200/260 si querés */
-
-.logo-hero{
-  display:flex;
-  justify-content:center;
-  margin: 10px 0 4px;
-}
-
-.logo-hero .logo-img{
-  width: var(--logo-size);
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-  display:block;
-}
-
-/* Desactivar estilos viejos de portada para que no molesten */
-.hero, .hero .portada, .portada-frame, .portada-frame img { display:none !important; }
-/* Tamaño base (desktop) */
-:root { --logo-size: 150px; }
-
-/* tablets */
-@media (max-width: 900px){
-  :root { --logo-size: 130px; }
-}
-
-/* celulares */
-@media (max-width: 640px){
-  :root { --logo-size: 110px; }
-}
-/* Leyenda dorada principal */
-.gold-legend{
-  color: var(--gold);
-  font-weight: 600;
-  margin: 6px auto 10px;
-  max-width: 900px;
-  line-height: 1.25;
-}
-.gold-legend .gold-promo{
-  display: inline-block;
-  margin-left: 6px;
-  font-weight: 700;
-}
-
-/* Nuevos botones */
-.btn.bonus{
-  background: linear-gradient(180deg, rgba(215,183,110,.28), rgba(215,183,110,.12));
-  border-color: rgba(215,183,110,.45);
-}
-.btn.external{
-  background: linear-gradient(180deg, rgba(91,45,130,.20), rgba(91,45,130,.08));
-  border-color: rgba(91,45,130,.35);
-}
-
-/* Logo chico (ajustá el tamaño desde esta variable) */
-:root { --logo-size: 140px; }  /* probá 120/140/160 */
-.logo-hero{
-  display:flex; justify-content:center; margin: 10px 0 6px;
-}
-.logo-hero .logo-img{
-  width: var(--logo-size); height:auto; border-radius:12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.35); display:block;
-}
-
-
-/* por si hace falta compactar espacio cuando va abajo de los botones */
-.logo-hero.logo-bottom { margin: 10px 0 0; }
-/* ---- Age Gate 18+ ---- */
+/* Modales */
 .age-backdrop{
   position: fixed; inset: 0; z-index: 9999;
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center;
 }
-.age-modal{
-  width: min(520px, 92vw);
-  background: rgba(24,16,38,0.95);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 16px; padding: 18px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+.age-modal, .vb-modal__card{
+  width:min(520px, 92vw);
+  background: rgba(19,20,27,.96);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px; padding:18px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.55);
 }
-.age-modal h3{ margin: 0 0 8px; }
-.age-modal p{ color: var(--muted); margin: 6px 0 12px; }
-.age-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.age-modal h3{ margin:0 0 8px }
+.age-actions{ display:flex; gap:10px; flex-wrap:wrap }
 .age-actions .btn{ flex:1 }
-.age-badge{ display:inline-block; padding:2px 8px; border-radius:999px;
-  background: rgba(215,183,110,.15); border: 1px solid rgba(215,183,110,.35); color: var(--gold);
-  font-size: 12px; margin-left: 6px;
-}
-/* --- Mejora estética “pro” --- */
+.age-badge{ display:inline-block; padding:2px 8px; border-radius:999px; background: rgba(224,193,120,.15); border:1px solid rgba(224,193,120,.35); color:var(--gold); font-size:12px; margin-left:6px }
 
-/* Dorado real en la leyenda */
-.gold-legend strong, .gold-legend .gold-promo{
-  background: linear-gradient(180deg,#fff3c4 0%, #e8cf87 35%, #d7b76e 55%, #b88f3a 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(0,0,0,.25));
-}
-
-/* Íconos en botones (data-ico) */
-.btn{ position:relative; overflow:hidden; min-height:56px; }
-.btn[data-ico]::before{
-  content: attr(data-ico);
-  position:relative; margin-right:10px; font-size:1.05rem; top:1px; opacity:.9;
-}
-
-/* Micro-interacciones */
-.btn:hover{ transform: translateY(-1px); box-shadow:0 10px 26px rgba(0,0,0,.38) }
-.btn:active{ transform: translateY(0); box-shadow:0 6px 18px rgba(0,0,0,.35) }
-.btn:focus-visible{ outline:2px solid rgba(215,183,110,.65); outline-offset:2px }
-
-/* “Shine” sutil en el botón de bono */
-.btn.bonus{ position:relative; }
-.btn.bonus::after{
-  content:""; position:absolute; inset:-40% -120% auto auto;
-  width:40%; height:200%; transform: rotate(25deg);
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.28) 50%, transparent 100%);
-  animation: vb-shine 2.8s linear infinite; pointer-events:none;
-}
-@keyframes vb-shine{ 0%{transform:translateX(-120%) rotate(25deg)} 100%{transform:translateX(220%) rotate(25deg)} }
-
-/* Cartita con más “glass” */
-.card{
-  background: radial-gradient(180% 160% at 50% -20%, rgba(255,255,255,.05), transparent 40%) ,
-              rgba(24,16,38,.86);
-  border:1px solid rgba(255,255,255,.10);
-  backdrop-filter: blur(2px) saturate(1.08);
-}
-
-/* Título un toque más compacto en desktop */
-@media (min-width: 860px){
-  h1.center{ letter-spacing:-.5px }
-}
-
-/* Logo más discreto (si lo usás arriba) */
-:root{ --logo-size: 120px; } /* probá 110–140px */
-.logo-hero{ margin:8px 0 2px }
-
-/* Separación más pareja debajo de la leyenda */
-.gold-legend{ margin:8px auto 12px }
-
-/* En móvil, botones un pelín más bajos */
-@media (max-width:640px){
-  .btn{ min-height:52px; }
-}
-/* Fila de acciones destacadas */
-.featured-actions{
-  display:flex; gap:12px; justify-content:center;
-  margin: 10px auto 12px; max-width: 920px;
-}
-.featured-actions .btn{
-  min-height: 56px;
-  padding: 12px 18px;
-  font-weight: 700;
-}
-/* En móvil, que se apilen */
-@media (max-width: 680px){
-  .featured-actions{ flex-direction:column; }
-}
-
-/* (Opcional) marquito sutil para separar visualmente */
-.featured-actions{
-  position: relative;
-}
-.featured-actions::before{
-  content:""; position:absolute; left:0; right:0; top:-8px;
-  height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
-}
-/* ==== OVERRIDE PALETA: Carbon Obsidian (dorado protagonista) ==== */
-:root{
-  --bg:#0b0c10;
-  --card:#15161b;
-  --violeta:#2e2f38;
-  --violeta2:#454652;
-  --gold:#d7b76e;
-  --text:#f3f3f4;
-  --muted:#b9bcc6;
-}
-
-/* 1) Fondo base: saca el gradiente violeta anterior */
-body{
-  background: radial-gradient(1000px 700px at 25% -10%, #2b2c33 0%, #0b0c10 60%) no-repeat fixed !important;
-}
-
-/* 2) Fondo difuminado: pasa a gris/negro */
-.bg-blur{ filter: blur(16px) brightness(0.5) saturate(1.0) !important; }
-.bg-blur::after{
-  background: radial-gradient(1000px 700px at 25% -10%, rgba(70,70,80,.35), rgba(10,10,14,.82)) !important;
-}
-
-/* 3) Tarjeta: glass en gris, sin tinte púrpura */
-.card{
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card) !important;
-  border-color: rgba(255,255,255,.10) !important;
-}
-
-/* 4) Componentes que aún tenían morado */
-.btn.secondary{
-  background: linear-gradient(180deg, rgba(46,47,56,.28), rgba(46,47,56,.12)) !important;
-  border-color: rgba(46,47,56,.40) !important;
-}
-.badge{
-  background: rgba(46,47,56,.25) !important;
-  border-color: rgba(46,47,56,.5) !important;
-}
-
-/* Admin panel y botones “oscuros” */
-.admin-panel{ background:#16171c !important; border-color: rgba(255,255,255,.12) !important; }
-.copybtn, .toast{ background:#17181d !important; border-color: rgba(255,255,255,.16) !important; }
-
-/* Botón externo en tono neutro (no violeta) */
-.btn.external{
-  background: linear-gradient(180deg, rgba(46,47,56,.20), rgba(46,47,56,.08)) !important;
-  border-color: rgba(46,47,56,.35) !important;
-}
-
-/* Inputs con fondo gris carbón (no púrpura) */
-.form input{ background:#0f1116 !important; }
+.vb-modal{ position:fixed; inset:0; z-index:9998; }
 .vb-modal.hidden{ display:none }
-.vb-modal{ position:fixed; inset:0; z-index:10010; display:grid; place-items:center; }
-.vb-modal__backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter: blur(2px); }
-.vb-modal__card{
-  position:relative; z-index:1; width:min(720px, 92vw);
-  background: rgba(21,22,27,.96); border:1px solid rgba(255,255,255,.12);
-  border-radius:16px; padding:14px; box-shadow:0 18px 60px rgba(0,0,0,.45);
-}
-.vb-modal__head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
-.vb-modal__close{ background:transparent; border:1px solid rgba(255,255,255,.18); color:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
-.vb-modal__body{ max-height:55vh; overflow:auto; border:1px dashed rgba(255,255,255,.08); border-radius:10px; padding:8px; background:#111319; }
-.vb-modal__foot{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px; }
-.vb-pre{ white-space:pre-wrap; font-family: inherit; font-size:14.5px; line-height:1.35; color:var(--text); margin:0; }
-
-
-
+.vb-modal__backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45) }
+.vb-modal__card{ position:relative; margin:8vh auto 0 }
+.vb-modal__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px }
+.vb-modal__close{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:6px 10px; cursor:pointer }
+.vb-pre{ white-space:pre-wrap; background:#0f1117; border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:10px; }

@@ -6,9 +6,9 @@
   <title>VegasBett — Centro de Atención</title>
 
   <!-- Estilos y config -->
-  <link rel="stylesheet" href="./assets/styles.css?v=16"/>
-  <script src="./assets/config.js?v=16"></script>
-  <script defer src="./assets/app.js?v=16"></script>
+  <link rel="stylesheet" href="assets/styles.css?v=18"/>
+  <script src="assets/config.js?v=18"></script>
+  <script defer src="assets/app.js?v=18"></script>
 
   <!-- Metas dinámicas (noindex + OG) -->
   <script>
@@ -40,7 +40,7 @@
           <span>🎰 VegasBett</span>
           <span class="badge">Atención 24/7</span>
         </div>
-        <!-- Admin oculto por defecto; se muestra con ?admin=1 -->
+        <!-- Admin oculto por defecto. Mostrar solo con ?admin=1 -->
         <span class="badge-pill badge-admin hidden" id="adminToggle" title="Panel rápido">Admin</span>
       </div>
 
@@ -59,7 +59,7 @@
         <span class="gold-promo">Bono del 35% en tu <u>primera carga</u> (mínimo $500).</span>
       </p>
 
-      <!-- Banner de promos (JS lo muestra y arma el texto) -->
+      <!-- Banner de promos (texto lo arma JS) -->
       <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today" rel="nofollow">
         <span class="promo-led" aria-hidden="true"></span>
         <span id="promoText">Promos de hoy activas</span>
@@ -73,7 +73,7 @@
         <button class="btn secondary" data-ico="ℹ️" id="btnMasInfo">Más info</button>
       </div>
 
-      <!-- Botonera principal (cargar/retirar arriba) -->
+      <!-- Botonera principal (Cargar/Retirar arriba) -->
       <div class="grid">
         <a class="btn warn" data-ico="💵" href="cargar.html">Quiero Cargar</a>
         <a class="btn" data-ico="💸" href="retirar.html">Quiero Retirar</a>
@@ -81,20 +81,20 @@
         <button class="btn secondary" data-ico="🛟" id="btnRespaldo">En caso de reclamo (WhatsApp)</button>
       </div>
 
-      <!-- Admin rápido -->
+      <!-- Panel Admin (solo si ?admin=1 y con PIN) -->
       <div id="adminPanel" class="admin-panel hidden">
         <h3>Panel rápido</h3>
         <p class="sub">Actualizá números al vuelo o generá un link compartible.</p>
         <div class="form">
           <div><label>PIN</label><input id="pin" type="password" placeholder="Ingresá tu PIN"/></div>
-          <div><label>Número principal</label><input id="nPrincipal" type="text" placeholder="5492233415879"/></div>
-          <div><label>Número respaldo (reclamos)</label><input id="nRespaldo" type="text" placeholder="5492233458173"/></div>
+          <div><label>Número principal</label><input id="nPrincipal" type="text" placeholder="549..."/></div>
+          <div><label>Número respaldo (reclamos)</label><input id="nRespaldo" type="text" placeholder="549..."/></div>
           <div class="cta-row">
             <button id="aplicarAdmin" class="btn ok">Aplicar ahora</button>
             <button id="genLink" class="btn secondary">Crear link compartible</button>
           </div>
           <div class="copy"><input id="linkResult" type="text" readonly value=""/><button class="copybtn" data-copy="#linkResult">Copiar link</button></div>
-          <p class="small">Tip: compartí ese link y la página usará esos números automáticamente.</p>
+          <p class="small">Tip: compartí ese link y la página usará esos números automáticamente (solo en esa sesión).</p>
         </div>
       </div>
 
@@ -146,3 +146,4 @@ Esto es lo que te espera:
   <div id="toast" class="toast">Copiado</div>
 </body>
 </html>
+

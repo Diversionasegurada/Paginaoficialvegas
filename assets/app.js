@@ -1,10 +1,10 @@
-// Lógica principal VegasBett — v17
+// Lógica principal VegasBett — v18
 (function () {
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const CFG = window.VEGASBETT_CONFIG || {};
 
-  // ---- Utilidades
+  // Utilidades
   const DIAS = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
   const todayInfo = () => {
     const d = new Date().getDay();
@@ -15,26 +15,17 @@
     const msg = encodeURIComponent(text || "");
     return number ? `https://wa.me/${number}?text=${msg}` : `https://wa.me/?text=${msg}`;
   };
-  const money = (n) => {
-    try {
-      const v = Number(n); if (isNaN(v)) return n;
-      return v.toLocaleString("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 });
-    } catch { return n; }
-  };
-  const toast = (t) => {
-    const el = $("#toast"); if (!el) return;
-    el.textContent = t; el.classList.add("show");
-    setTimeout(()=> el.classList.remove("show"), 1600);
-  };
-  const copyFrom = (sel) => {
-    const el = $(sel); if (!el) return;
-    el.select(); document.execCommand("copy"); toast("Copiado ✅");
-  };
+  const money = (n) => { try {
+    const v = Number(n); if (isNaN(v)) return n;
+    return v.toLocaleString("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 });
+  } catch { return n; } };
+  const toast = (t) => { const el=$("#toast"); if (!el) return; el.textContent=t; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),1600); };
+  const copyFrom = (sel) => { const el=$(sel); if(!el) return; el.select(); document.execCommand("copy"); toast("Copiado ✅"); };
 
-  // Año en footer
+  // Año footer
   $("#year") && ($("#year").textContent = new Date().getFullYear());
 
-  // Overrides por URL (emergencia)
+  // Overrides por URL (emergencia por link)
   try {
     const u = new URL(location.href);
     const p = u.searchParams.get("principal");
@@ -43,42 +34,38 @@
     if (r) CFG.NUMERO_RESPALDO  = r;
   } catch {}
 
-  // === HOTFIX REMOTO (sin caché) ===
+  // HOTFIX REMOTO: assets/hotfix.json (no cache)
   (async function applyHotfix(){
     try {
-      const res = await fetch('assets/hotfix.json?ts=' + Date.now(), { cache: 'no-store' });
+      const res = await fetch('assets/hotfix.json?ts='+Date.now(), { cache:'no-store' });
       if (!res.ok) return;
       const hf = await res.json();
       if (hf && typeof hf === 'object') Object.assign(CFG, hf);
 
-      // refresco CBU/ALIAS visibles si ya están en pantalla
+      // refrescar campos visibles si ya existe el DOM
       const cbu   = $("#cbu");
       const alias = $("#alias");
+      const tit   = $("#titularCta");
       if (cbu && CFG.CBU)     cbu.value   = CFG.CBU;
       if (alias && CFG.ALIAS) alias.value = CFG.ALIAS;
+      if (tit && CFG.TITULAR) tit.textContent = CFG.TITULAR;
     } catch {}
   })();
 
-  // ==== HEADER: mostrar Admin sólo con ?admin=1
-  (function showAdminOnDemand(){
-    try {
-      const u = new URL(location.href);
-      if (u.searchParams.get('admin') === '1') {
-        $("#adminToggle")?.classList.remove('hidden');
-      }
-    } catch {}
+  // Mostrar Admin solo con ?admin=1
+  (function showAdmin(){
+    try { if (new URL(location.href).searchParams.get('admin')==='1')
+      $("#adminToggle")?.classList.remove('hidden'); } catch {}
   })();
 
-  // ==== PROMO DEL DÍA (Index)
+  // PROMO DEL DÍA (index)
   (function promoTicker(){
     const a = $("#promoTicker"); if (!a) return;
-
     const qp = new URLSearchParams(location.search);
     const forceOff = qp.get("promos")==="off";
     const forceOn  = qp.get("promos")==="on";
-    if ((!CFG.SHOW_PROMO_TICKER && !forceOn) || forceOff) {
-      a.classList.add("hidden"); return;
-    }
+    if ((!CFG.SHOW_PROMO_TICKER && !forceOn) || forceOff) { a.classList.add("hidden"); return; }
+
     const t = todayInfo();
     if (!t.percent) { a.classList.add("hidden"); return; }
 
@@ -86,83 +73,61 @@
     const max = CFG.PROMO_MAX || 20000;
     const txt = `Hoy ${t.dayName}: bono +${t.percent}% en cargas de ${money(min)} a ${money(max)}. (1 bono cada 24 h por usuario)`;
     $("#promoText") && ($("#promoText").textContent = txt);
-
-    // link a cargar con promo del día
     const base = location.origin + location.pathname.replace(/index\.html?$/i,'');
     a.href = `${base}cargar.html?promo=today`;
     a.classList.remove("hidden");
   })();
 
-  // ==== Botones Home
+  // Home: botones
   $("#btnPrincipal")?.addEventListener("click", () => {
     const text = `Hola, soy ____.
 Necesito atención del *número principal*.
 Gracias.`;
-    if (typeof fbq === "function") fbq("track","Contact",{flow:"direct",target:"principal"});
     location.href = waUrl(CFG.NUMERO_PRINCIPAL, text);
   });
-
   $("#btnRespaldo")?.addEventListener("click", () => {
     const text = `Hola, soy ____.
 Necesito atención del *número de reclamos*.
 Gracias.`;
-    if (typeof fbq === "function") fbq("track","Contact",{flow:"direct",target:"respaldo"});
     location.href = waUrl(CFG.NUMERO_RESPALDO, text);
   });
 
-  // ==== CARGAR
+  // CARGAR
   if ($("#formCargar")) {
     const form  = $("#formCargar");
     const paso2 = $("#paso2");
     const cbu   = $("#cbu");
     const alias = $("#alias");
+    const tit   = $("#titularCta");
     if (cbu)   cbu.value   = CFG.CBU   || "";
     if (alias) alias.value = CFG.ALIAS || "";
+    if (tit)   tit.textContent = CFG.TITULAR || "-";
 
     $$(".copybtn").forEach(btn => btn.addEventListener("click", (e) => {
       e.preventDefault(); copyFrom(btn.getAttribute("data-copy"));
     }));
 
-    // Detectar promo (?promo=today | ?promo=new)
+    // Detectar promo
     const qp = new URLSearchParams(location.search);
-    const promoParam = qp.get("promo");
+    const promoParam = qp.get('promo'); // 'today' | 'new' | null
     let activePromo = null;
 
-    if (promoParam === "today") {
+    if (promoParam === 'today') {
       const t = todayInfo();
       if (t.percent) {
-        activePromo = {
-          type: "today",
-          label: "Bono del día",
-          percent: t.percent,
-          dayName: t.dayName,
-          min: CFG.PROMO_MIN || 2000,
-          max: CFG.PROMO_MAX || 20000,
-        };
+        activePromo = { type:'today', label:'Bono del día', percent:t.percent, dayName:t.dayName, min:CFG.PROMO_MIN||2000, max:CFG.PROMO_MAX||20000 };
         const n = $("#promoNotice");
-        if (n) {
-          n.textContent = `Promo activa: +${t.percent}% (${t.dayName}) de ${money(activePromo.min)} a ${money(activePromo.max)}. 1 cada 24 h por usuario.`;
-          n.classList.remove("hidden");
-        }
+        if (n) { n.textContent = `Promo activa: +${t.percent}% (${t.dayName}) de ${money(activePromo.min)} a ${money(activePromo.max)}. 1 cada 24 h por usuario.`; n.classList.remove("hidden"); }
       }
     }
-    if (promoParam === "new") {
-      activePromo = {
-        type: "new",
-        label: "Bono de bienvenida",
-        percent: CFG.NEW_USER_BONO || 35,
-        min: CFG.NEW_MIN || 500,
-        max: null,
-      };
+    if (promoParam === 'new') {
+      activePromo = { type:'new', label:'Bono de bienvenida', percent:CFG.NEW_USER_BONO||35, min:CFG.NEW_MIN||500, max:null };
       const n = $("#promoNotice");
-      if (n) {
-        n.textContent = `Bono de bienvenida +${activePromo.percent}% (mínimo ${money(activePromo.min)}).`;
-        n.classList.remove("hidden");
-      }
+      if (n) { n.textContent = `Bono de bienvenida +${activePromo.percent}% (mínimo ${money(activePromo.min)}).`; n.classList.remove("hidden"); }
     }
 
-    // Enforce mínimo en el input si aplica
-    const montoInput = $("#monto");
+    // mínimo en input si aplica
+    const montoInput = $('#monto');
     if (montoInput && activePromo?.min) montoInput.min = String(activePromo.min);
 
     form.addEventListener("submit", (e) => {
@@ -179,14 +144,14 @@ Gracias.`;
       const monto  = $("#monto").value.trim();
       if (!nombre || !monto) { alert("Completá nombre y monto."); return; }
 
-      // Validaciones de promo
+      // Validaciones promo
       if (activePromo) {
         const m = Number(monto);
-        if (activePromo.type === "today") {
-          const {min, max} = activePromo;
+        if (activePromo.type === 'today') {
+          const {min,max} = activePromo;
           if (m < min || m > max) { alert(`El ${activePromo.label} aplica entre ${money(min)} y ${money(max)}.`); return; }
         }
-        if (activePromo.type === "new") {
+        if (activePromo.type === 'new') {
           const {min} = activePromo;
           if (m < min) { alert(`El ${activePromo.label} aplica desde ${money(min)}.`); return; }
         }
@@ -197,23 +162,15 @@ Gracias.`;
         `Quiero *CARGAR* ${money(monto)}.`
       ];
       if (activePromo) {
-        if (activePromo.type === "today") {
-          lines.push(`Aplicar *${activePromo.label}* (${activePromo.dayName} +${activePromo.percent}%).`);
-        } else {
-          lines.push(`Soy nuevo/a y quiero el *${activePromo.label}* (+${activePromo.percent}%).`);
-        }
+        if (activePromo.type === 'today') lines.push(`Aplicar *${activePromo.label}* (${activePromo.dayName} +${activePromo.percent}%).`);
+        else lines.push(`Soy nuevo/a y quiero el *${activePromo.label}* (+${activePromo.percent}%).`);
       }
       lines.push(`CBU/ALIAS copiado. Envío el comprobante aquí.`);
-      const text = lines.join("\n");
-
-      if (typeof fbq === "function") {
-        fbq("track", "Contact", { flow: activePromo ? (activePromo.type==='new'?'cargar_new':'cargar_promo') : 'cargar' });
-      }
-      location.href = waUrl(CFG.NUMERO_PRINCIPAL, text);
+      location.href = waUrl(CFG.NUMERO_PRINCIPAL, lines.join('\n'));
     });
   }
 
-  // ==== RETIRAR
+  // RETIRAR
   if ($("#formRetirar")) {
     const titularInput = $("#titularR");
     const cbuAliasInput = $("#cbuAliasR");
@@ -234,26 +191,23 @@ Gracias.`;
 Titular: ${titular}
 CBU o Alias: ${cbuAlias}
 Monto a retirar: ${money(monto)}`;
-      if (typeof fbq === "function") fbq("track","Contact",{flow:"retirar"});
       location.href = waUrl(CFG.NUMERO_PRINCIPAL, text);
     });
   }
 
-  // ==== Panel Admin
+  // Panel Admin
   const adminToggle = $("#adminToggle");
   const panel = $("#adminPanel");
   const pin   = $("#pin");
   const nP    = $("#nPrincipal");
   const nR    = $("#nRespaldo");
   adminToggle && panel && adminToggle.addEventListener("click", () => panel.classList.toggle("hidden"));
-
   $("#aplicarAdmin")?.addEventListener("click", () => {
     if (!pin.value || pin.value !== (CFG.EMERGENCY_PIN || "")) { alert("PIN incorrecto"); return; }
     if (nP && nP.value) CFG.NUMERO_PRINCIPAL = nP.value.trim();
     if (nR && nR.value) CFG.NUMERO_RESPALDO  = nR.value.trim();
     toast("Números aplicados (solo en esta sesión)");
   });
-
   $("#genLink")?.addEventListener("click", () => {
     if (!pin.value || pin.value !== (CFG.EMERGENCY_PIN || "")) { alert("PIN incorrecto"); return; }
     const base = location.origin + location.pathname.replace(/index\.html?$/i,"");
@@ -265,7 +219,7 @@ Monto a retirar: ${money(monto)}`;
     if (out) { out.value = link; out.select(); document.execCommand("copy"); toast("Link generado"); }
   });
 
-  // ==== Age Gate 18+
+  // Age 18+
   (function ageGate(){
     if (!CFG.AGE_GATE_ENABLED) return;
     if (localStorage.getItem('AGE_OK') === '1') return;
@@ -282,29 +236,22 @@ Monto a retirar: ${money(monto)}`;
         </div>
       </div>`;
     document.body.appendChild(backdrop);
-    $("#ageYes")?.addEventListener('click', () => { localStorage.setItem('AGE_OK','1'); backdrop.remove(); });
-    $("#ageNo")?.addEventListener('click', () => { window.location.href = 'https://www.google.com'; });
+    $("#ageYes")?.addEventListener('click', ()=>{ localStorage.setItem('AGE_OK','1'); backdrop.remove(); });
+    $("#ageNo")?.addEventListener('click', ()=>{ window.location.href='https://www.google.com'; });
   })();
 
-  // ==== Modal “Más info”
+  // Modal Más info (copiar spech)
   (function(){
-    const modal   = $("#modalInfo");
-    const btnOpen = $("#btnMasInfo");
-    const btnClose= $("#modalClose");
-    const btnOk   = $("#modalOk");
-    const btnCopy = $("#copySpech");
-    const spech   = $("#spechText");
+    const modal=$("#modalInfo"), btnOpen=$("#btnMasInfo");
     if (!modal || !btnOpen) return;
-
-    const open  = ()=> { modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); };
-    const close = ()=> { modal.classList.add('hidden');   modal.setAttribute('aria-hidden','true');  };
-
+    const btnClose=$("#modalClose"), btnOk=$("#modalOk"), btnCopy=$("#copySpech"), spech=$("#spechText");
+    const open = ()=>{ modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); };
+    const close= ()=>{ modal.classList.add('hidden');   modal.setAttribute('aria-hidden','true');  };
     btnOpen.addEventListener('click', open);
     btnClose?.addEventListener('click', close);
     btnOk?.addEventListener('click', close);
-    modal.querySelector('.vb-modal__backdrop')?.addEventListener('click', e => { if (e.target.dataset.close) close(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-
+    modal.querySelector('.vb-modal__backdrop')?.addEventListener('click', e=>{ if(e.target.dataset.close) close(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
     btnCopy?.addEventListener('click', ()=>{
       const txt = spech?.innerText || '';
       (navigator.clipboard?.writeText(txt) || Promise.reject()).then(

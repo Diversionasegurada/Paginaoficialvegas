@@ -170,30 +170,47 @@ Gracias.`;
     });
   }
 
-  // RETIRAR
-  if ($("#formRetirar")) {
-    const titularInput = $("#titularR");
-    const cbuAliasInput = $("#cbuAliasR");
-    if (titularInput && CFG.TITULAR) titularInput.value = CFG.TITULAR;
-    if (cbuAliasInput) cbuAliasInput.value = (CFG.ALIAS || CFG.CBU || "");
+// ----------------- RETIRAR
+if (document.querySelector("#formRetirar")) {
+  const titularInput  = document.querySelector("#titularR");
+  const cbuAliasInput = document.querySelector("#cbuAliasR");
 
-    $("#formRetirar").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const usuario  = $("#usuarioR").value.trim();
-      const titular  = $("#titularR").value.trim();
-      const cbuAlias = $("#cbuAliasR").value.trim();
-      const monto    = $("#montoR").value.trim();
+  // SOLO place­holders de ejemplo (no autocompletar con CFG)
+  if (titularInput)  titularInput.placeholder  = "Ej: Nombre y Apellido";
+  if (cbuAliasInput) cbuAliasInput.placeholder = "Ej: ALIAS (mi.alias) o CBU (22 dígitos)";
 
-      if (!usuario || !titular || !cbuAlias || !monto) { alert("Completá todos los campos."); return; }
-      if (Number(monto) > 250000) { alert("El monto máximo por retiro es $250.000"); return; }
+  document.querySelector("#formRetirar").addEventListener("submit", (e) => {
+    e.preventDefault();
 
-      const text = `Usuario: ${usuario}
+    const usuario  = document.querySelector("#usuarioR").value.trim();
+    const titular  = document.querySelector("#titularR").value.trim();
+    const cbuAlias = document.querySelector("#cbuAliasR").value.trim();
+    const monto    = document.querySelector("#montoR").value.trim();
+
+    if (!usuario || !titular || !cbuAlias || !monto) {
+      alert("Completá todos los campos.");
+      return;
+    }
+    if (Number(monto) > 250000) {
+      alert("El monto máximo por retiro es $250.000");
+      return;
+    }
+
+    const text = `Usuario: ${usuario}
 Titular: ${titular}
 CBU o Alias: ${cbuAlias}
-Monto a retirar: ${money(monto)}`;
-      location.href = waUrl(CFG.NUMERO_PRINCIPAL, text);
-    });
-  }
+Monto a retirar: ${monto.toLocaleString("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 })}`;
+
+    const url = (number, txt) => {
+      const msg = encodeURIComponent(txt || "");
+      return number ? `https://wa.me/${number}?text=${msg}` : `https://wa.me/?text=${msg}`;
+    };
+
+    const CFG = window.VEGASBETT_CONFIG || {};
+    window.location.href = url(CFG.NUMERO_PRINCIPAL, text);
+  });
+}
+
 
   // Panel Admin
   const adminToggle = $("#adminToggle");

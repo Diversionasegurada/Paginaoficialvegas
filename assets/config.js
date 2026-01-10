@@ -4,7 +4,7 @@ window.VEGASBETT_CONFIG = {
   MARCA: "VegasBett",
 
   // Números (sin + ni espacios)
-  NUMERO_PRINCIPAL: "5492233415879",
+  NUMERO_PRINCIPAL: "5492233458173",
   NUMERO_RESPALDO:  "5492233458173",
 
   // Datos bancarios
@@ -38,13 +38,13 @@ window.VEGASBETT_CONFIG = {
 
   // Porcentaje por día (0=Dom,1=Lun,...6=Sáb)
   PROMO_BONUS_BY_DAY: {
-    0: 20, // Domingo
-    1: 15, // Lunes
+    0: 15, // Domingo
+    1: 5, // Lunes
     2: 10, // Martes
-    3: 10, // Miércoles
+    3: 5, // Miércoles
     4: 10, // Jueves
     5: 15, // Viernes
-    6: 20  // Sábado
+    6: 15  // Sábado
   },
 
   // Bono bienvenida

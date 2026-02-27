@@ -38,13 +38,13 @@ window.VEGASBETT_CONFIG = {
 
   // Porcentaje por día (0=Dom,1=Lun,...6=Sáb)
   PROMO_BONUS_BY_DAY: {
-    0: 15, // Domingo
+    0: 10, // Domingo
     1: 5, // Lunes
     2: 10, // Martes
     3: 5, // Miércoles
-    4: 10, // Jueves
-    5: 15, // Viernes
-    6: 15  // Sábado
+    4: 5, // Jueves
+    5: 10, // Viernes
+    6: 10  // Sábado
   },
 
   // Bono bienvenida

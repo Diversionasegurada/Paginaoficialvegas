@@ -8,9 +8,9 @@ window.VEGASBETT_CONFIG = {
   NUMERO_RESPALDO:  "5492236914771",
 
   // Datos bancarios
-  CBU: "0000003100056935839518",
-  ALIAS: "Vegass.bet",
-  TITULAR: "Priscila Correa",
+  CBU: "0000085700274606489697",
+  ALIAS: "Vegasbett",
+  TITULAR: "Milagros Diana Maricel Quinonez",
 
   // Preview / privacidad
   SHARE_PREVIEW: true,

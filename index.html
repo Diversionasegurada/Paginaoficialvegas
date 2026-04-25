@@ -7,56 +7,57 @@
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
 
   <script>
-    // 1. CONFIGURACIÓN INTEGRADA (Para que no falle nunca)
+    // 1. CONFIGURACIÓN COMPLETA
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
         JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
       },
-      MARCA: "VegasBett",
-      CBU: "0000085700274606489697",
-      ALIAS: "Vegasbett",
-      TITULAR: "Milagros Diana Maricel Quinonez"
+      PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }, // % por día
+      PROMO_MIN: 2000,
+      PROMO_MAX: 20000
     };
 
-    // 2. LÓGICA DE TURNOS
     function inicializarPagina() {
-        const hora = new Date().getHours();
-        const config = window.VEGASBETT_CONFIG.ATENCION;
-        let encargado;
+        const ahora = new Date();
+        const hora = ahora.getHours();
+        const diaSemana = ahora.getDay();
+        const config = window.VEGASBETT_CONFIG;
+        
+        // --- LÓGICA DE TURNOS ---
+        let encargado = (hora >= config.ATENCION.CLARA.inicio && hora < config.ATENCION.CLARA.fin) 
+                        ? config.ATENCION.CLARA 
+                        : config.ATENCION.JULI;
 
-        // Determinamos quién atiende
-        if (hora >= config.CLARA.inicio && hora < config.CLARA.fin) {
-            encargado = config.CLARA;
-        } else {
-            encargado = config.JULI;
-        }
-
-        // Actualizamos los elementos de la página
         const btnAtencion = document.getElementById('btnAtencionDinamica');
-        const infoHorario = document.getElementById('infoHorario');
-        const yearSpan = document.getElementById('year');
-
         if (btnAtencion) {
             btnAtencion.textContent = "Chatear con " + encargado.nombre + " (Online)";
-            btnAtencion.onclick = function() {
+            btnAtencion.onclick = () => {
                 const mensaje = encodeURIComponent("Hola " + encargado.nombre + ", necesito atención en VegasBett.");
                 window.open("https://wa.me/" + encargado.numero + "?text=" + mensaje, "_blank");
             };
         }
 
-        if (infoHorario) {
-            infoHorario.textContent = "Atención: Clara (08 a 20hs) • Juli (20 a 08hs)";
+        // --- LÓGICA DEL BANNER DE BONO ---
+        const DIAS = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+        const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
+        const ticker = document.getElementById('promoTicker');
+        const promoText = document.getElementById('promoText');
+
+        if (bonoHoy && ticker) {
+            promoText.textContent = "Hoy " + DIAS[diaSemana] + ": bono +" + bonoHoy + "% en cargas de $2.000 a $20.000.";
+            ticker.classList.remove('hidden'); // Esto hace que aparezca
         }
 
-        if (yearSpan) {
-            yearSpan.textContent = new Date().getFullYear();
+        // --- EXTRAS ---
+        if (document.getElementById('infoHorario')) {
+            document.getElementById('infoHorario').textContent = "Atención: Clara (08 a 20hs) • Juli (20 a 08hs)";
         }
-        
-        console.log("Sistema de turnos activado para: " + encargado.nombre);
+        if (document.getElementById('year')) {
+            document.getElementById('year').textContent = ahora.getFullYear();
+        }
     }
 
-    // Ejecutar cuando cargue el DOM
     window.addEventListener('DOMContentLoaded', inicializarPagina);
   </script>
 </head>
@@ -72,25 +73,28 @@
       </div>
 
       <h1 class="center">¿Qué necesitás hacer hoy?</h1>
-      <p class="center sub">Uso interno.</p>
 
       <p class="center gold-legend">
         Página oficial de <strong>VEGASBETT</strong> — jugá distinto, jugá seguro.
         <span class="gold-promo">Bono del 35% en tu primera carga (mínimo $1.000).</span>
       </p>
 
-      <div class="featured-actions">
-        <a class="btn external" href="https://ganamosnet.club/home/" target="_blank">Ir a ganamosnet.club</a>
+      <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today">
+        <span class="promo-led"></span>
+        <span id="promoText">Cargando promos...</span>
+        <span class="promo-cta">Aprovechar →</span>
+      </a>
+
+      <div class="featured-actions" style="margin-top: 15px;">
+        <a class="btn external" href="https://ganamosnet.club/home" target="_blank">Ir a ganamosnet</a>
         <a class="btn bonus" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
       </div>
 
       <div class="grid">
         <a class="btn warn" href="cargar.html">Quiero Cargar</a>
         <a class="btn" href="retirar.html">Quiero Retirar</a>
-        
         <button class="btn ok" id="btnAtencionDinamica">Cargando atención...</button>
-        
-        <button class="btn secondary" onclick="alert('Iniciando soporte...');">Centro de Ayuda</button>
+        <button class="btn secondary" id="btnAyuda">Centro de Ayuda</button>
       </div>
       
       <p class="center small sub" id="infoHorario" style="margin-top: 10px; font-size: 11px;"></p>

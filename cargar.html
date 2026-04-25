@@ -3,65 +3,57 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VegasBett — Cargar saldo</title>
-
+  <title>Cargar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
-  <script src="assets/config.js?v=18"></script>
-  <script defer src="assets/app.js?v=18"></script>
+  <script>
+    window.VEGASBETT_CONFIG = {
+      ATENCION: {
+        CLARA: { nombre: "Clara", numero: "5492235393540", inicio: 8, fin: 20 },
+        JULI: { nombre: "Juli", numero: "5492236914771", inicio: 20, fin: 8 }
+      },
+      CBU: "0000085700274606489697",
+      ALIAS: "Vegasbett",
+      TITULAR: "Milagros Diana Maricel Quinonez"
+    };
 
-  <script>(function(){
-    const C=window.VEGASBETT_CONFIG||{};
-    if(C.NO_INDEX){var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow';document.head.appendChild(m)}
-    if(C.SHARE_PREVIEW!==false){
-      var t=document.createElement('meta');t.setAttribute('property','og:title');t.content=(C.MARCA||'VegasBett')+' – Cargar';document.head.appendChild(t);
-      var d=document.createElement('meta');d.setAttribute('property','og:description');d.content='Cargá saldo y enviá el comprobante por WhatsApp.';document.head.appendChild(d);
-      var i=document.createElement('meta');i.setAttribute('property','og:image');i.content=(C.OG_IMAGE||'assets/portada_paginaweb.png');document.head.appendChild(i);
+    function enviarCarga() {
+        const hora = new Date().getHours();
+        const config = window.VEGASBETT_CONFIG.ATENCION;
+        const encargado = (hora >= config.CLARA.inicio && hora < config.CLARA.fin) ? config.CLARA : config.JULI;
+        
+        const nombre = document.getElementById('nombre').value;
+        const monto = document.getElementById('monto').value;
+        
+        if(!nombre || !monto) { alert("Por favor completá tu nombre y el monto."); return; }
+
+        let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\nQuiero *CARGAR* $" + monto + ".\nEnvío el comprobante a continuación.";
+        window.open("https://wa.me/" + encargado.numero + "?text=" + encodeURIComponent(mensaje), "_blank");
     }
-    var tc=document.createElement('meta');tc.name='theme-color';tc.content='#13141b';document.head.appendChild(tc);
-  })();</script>
+
+    function copiar(id) {
+        const text = id === 'cbu' ? window.VEGASBETT_CONFIG.CBU : window.VEGASBETT_CONFIG.ALIAS;
+        navigator.clipboard.writeText(text).then(() => alert("Copiado: " + text));
+    }
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <div class="header">
-        <div class="brand"><span>🎰 VegasBett</span><span class="badge">Cargar</span></div>
-        <a class="badge-pill" href="index.html">← Volver</a>
-      </div>
-
-      <h1>Ingresá tus datos</h1>
-      <p class="sub">Completá el nombre y el monto. Copiá CBU/ALIAS y enviá el comprobante por WhatsApp.</p>
-
-      <!-- Aviso promo (si viene con ?promo=today o ?promo=new) -->
-      <div id="promoNotice" class="note hidden"></div>
-
-      <form id="formCargar" class="form">
-        <div><label for="nombre">Nombre o usuario</label><input id="nombre" type="text" placeholder="Ej: Ricardo" required/></div>
-        <div><label for="monto">Monto a cargar (ARS)</label><input id="monto" type="number" inputmode="numeric" placeholder="Ej: 20000" required min="1"/></div>
-        <div class="cta-row">
-          <button type="submit" class="btn warn">Continuar →</button>
-          <a href="index.html" class="btn secondary">Cancelar</a>
+      <h2 class="center">Cargar Créditos</h2>
+      <div class="form">
+        <input type="text" id="nombre" placeholder="Tu nombre de usuario"/>
+        <input type="number" id="monto" placeholder="Monto a cargar (ej: 5000)"/>
+        
+        <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #333;">
+            <p><strong>Titular:</strong> Milagros Diana Maricel Quinonez</p>
+            <p><strong>Alias:</strong> Vegasbett <button onclick="copiar('alias')" style="font-size: 10px;">Copiar</button></p>
+            <p><strong>CBU:</strong> 0000085700274606489697 <button onclick="copiar('cbu')" style="font-size: 10px;">Copiar</button></p>
         </div>
-      </form>
 
-      <div id="paso2" class="hidden">
-        <hr class="soft"/>
-        <h2>1) Copiá los datos para transferir</h2>
-        <div class="copy"><input id="cbu" type="text" readonly value=""/><button class="copybtn" data-copy="#cbu">Copiar CBU</button></div>
-        <div class="copy"><input id="alias" type="text" readonly value=""/><button class="copybtn" data-copy="#alias">Copiar ALIAS</button></div>
-        <p class="small">Titular de la cuenta: <strong id="titularCta">-</strong></p>
-        <div class="note">Transferí el <strong>mismo monto</strong> que indicaste y adjuntá el <strong>comprobante</strong> en WhatsApp.</div>
-
-        <h2 style="margin-top:14px">2) Enviá por WhatsApp</h2>
-        <div class="cta-row">
-          <button id="enviarWhatsCargar" class="btn ok">Enviar por WhatsApp</button>
-          <a href="index.html" class="btn secondary">Volver</a>
-        </div>
+        <button class="btn ok" onclick="enviarCarga()">Informar Carga por WhatsApp</button>
+        <a href="index.html" class="btn secondary">Volver atrás</a>
       </div>
-
-      <footer class="center">© <span id="year"></span> VegasBett</footer>
     </div>
   </div>
-  <div id="toast" class="toast">Copiado</div>
 </body>
 </html>
-

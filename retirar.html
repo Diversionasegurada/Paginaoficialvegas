@@ -3,72 +3,52 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VegasBett — Retirar saldo</title>
-
+  <title>Retirar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
-  <script src="assets/config.js?v=18"></script>
-  <script defer src="assets/app.js?v=18"></script>
+  <script>
+    window.VEGASBETT_CONFIG = {
+      ATENCION: {
+        CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
+        JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
+      }
+    };
 
-  <script>(function(){
-    const C=window.VEGASBETT_CONFIG||{};
-    if(C.NO_INDEX){
-      var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow';document.head.appendChild(m)
+    function enviarRetiro() {
+        const hora = new Date().getHours();
+        const config = window.VEGASBETT_CONFIG.ATENCION;
+        const encargado = (hora >= config.CLARA.inicio && hora < config.CLARA.fin) ? config.CLARA : config.JULI;
+
+        const usuario = document.getElementById('usuarioR').value;
+        const titular = document.getElementById('titularR').value;
+        const cbuAlias = document.getElementById('cbuAliasR').value;
+        const monto = document.getElementById('montoR').value;
+
+        if(!usuario || !titular || !cbuAlias || !monto) { alert("Completá todos los campos."); return; }
+
+        const mensaje = "Hola " + encargado.nombre + ", quiero un RETIRO:\n" +
+                        "Usuario: " + usuario + "\n" +
+                        "Titular: " + titular + "\n" +
+                        "CBU/Alias: " + cbuAlias + "\n" +
+                        "Monto: $" + monto;
+
+        window.open("https://wa.me/" + encargado.numero + "?text=" + encodeURIComponent(mensaje), "_blank");
     }
-    if(C.SHARE_PREVIEW!==false){
-      var t=document.createElement('meta');t.setAttribute('property','og:title');t.content=(C.MARCA||'VegasBett')+' – Retirar';document.head.appendChild(t);
-      var d=document.createElement('meta');d.setAttribute('property','og:description');d.content='Solicitá tu retiro (1 cada 24 hs).';document.head.appendChild(d);
-      var i=document.createElement('meta');i.setAttribute('property','og:image');i.content=(C.OG_IMAGE||'assets/portada_paginaweb.png');document.head.appendChild(i);
-    }
-    var tc=document.createElement('meta');tc.name='theme-color';tc.content='#13141b';document.head.appendChild(tc);
-  })();</script>
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <div class="header">
-        <div class="brand"><span>🎰 VegasBett</span><span class="badge">Retiros</span></div>
-        <a class="badge-pill" href="index.html">← Volver</a>
+      <h2 class="center">Solicitar Retiro</h2>
+      <div class="form">
+        <input type="text" id="usuarioR" placeholder="Tu usuario de la plataforma"/>
+        <input type="text" id="titularR" placeholder="Titular de la cuenta bancaria"/>
+        <input type="text" id="cbuAliasR" placeholder="CBU o ALIAS donde recibís"/>
+        <input type="number" id="montoR" placeholder="Monto a retirar"/>
+        
+        <button class="btn ok" onclick="enviarRetiro()">Pedir Retiro por WhatsApp</button>
+        <a href="index.html" class="btn secondary">Volver atrás</a>
       </div>
-
-      <h1>Solicitá tu retiro</h1>
-      <p class="sub">Un retiro cada 24 horas. Completá tus datos y te confirmamos por WhatsApp.</p>
-
-      <form id="formRetirar" class="form" autocomplete="off">
-        <div>
-          <label for="usuarioR">Usuario</label>
-          <input id="usuarioR" type="text" placeholder="Ej: ricardo23" required autocomplete="off"/>
-        </div>
-
-        <div>
-          <label for="titularR">Titular de la cuenta</label>
-          <input id="titularR" type="text" placeholder="Ej: Nombre y Apellido" required autocomplete="off"/>
-        </div>
-
-        <div>
-          <label for="cbuAliasR">CBU o Alias</label>
-          <input id="cbuAliasR" type="text" placeholder="Ej: ALIAS (mi.alias) o CBU (22 dígitos)" required autocomplete="off"/>
-        </div>
-
-        <div>
-          <label for="montoR">Monto a retirar (ARS)</label>
-          <input id="montoR" type="number" inputmode="numeric" placeholder="Ej: 20000" required min="1" max="250000" autocomplete="off"/>
-        </div>
-
-        <div class="note">
-          Recordá: un retiro <strong>cada 24 horas</strong>. Máximo por retiro: $250.000.
-        </div>
-
-        <div class="cta-row">
-          <button type="submit" class="btn ok">Enviar por WhatsApp</button>
-          <a href="index.html" class="btn secondary">Cancelar</a>
-        </div>
-      </form>
-
-      <footer class="center">© <span id="year"></span> VegasBett</footer>
     </div>
   </div>
-  <div id="toast" class="toast">Copiado</div>
 </body>
 </html>
-
-

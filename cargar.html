@@ -6,6 +6,7 @@
   <title>Cargar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
   <script>
+    // 1. CONFIGURACIÓN DE TURNOS Y MONTOS
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
@@ -13,20 +14,53 @@
       },
       CBU: "0000085700274606489697",
       ALIAS: "Vegasbett",
-      TITULAR: "Milagros Diana Maricel Quinonez"
+      TITULAR: "Milagros Diana Maricel Quinonez",
+      MIN_NUEVO: 1000,
+      MIN_PROMO_DIA: 2000
     };
 
     function enviarCarga() {
         const hora = new Date().getHours();
-        const config = window.VEGASBETT_CONFIG.ATENCION;
-        const encargado = (hora >= config.CLARA.inicio && hora < config.CLARA.fin) ? config.CLARA : config.JULI;
+        const config = window.VEGASBETT_CONFIG;
+        const turnos = config.ATENCION;
         
-        const nombre = document.getElementById('nombre').value;
-        const monto = document.getElementById('monto').value;
+        // Detectar encargado por horario
+        const encargado = (hora >= turnos.CLARA.inicio && hora < turnos.CLARA.fin) ? turnos.CLARA : turnos.JULI;
         
-        if(!nombre || !monto) { alert("Por favor completá tu nombre y el monto."); return; }
+        const nombre = document.getElementById('nombre').value.trim();
+        const montoStr = document.getElementById('monto').value;
+        const monto = parseInt(montoStr);
+        
+        // Verificamos si viene de una promo específica por la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const esNuevo = urlParams.get('promo') === 'new';
+        const esPromoDia = urlParams.get('promo') === 'today';
 
-        let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\nQuiero *CARGAR* $" + monto + ".\nEnvío el comprobante a continuación.";
+        // --- VALIDACIONES ---
+        if(!nombre || !montoStr) { 
+            alert("Por favor completá tu nombre y el monto."); 
+            return; 
+        }
+
+        if (esNuevo && monto < config.MIN_NUEVO) {
+            alert("El monto mínimo para el Bono de Bienvenida (35%) es de $" + config.MIN_NUEVO);
+            return;
+        }
+
+        if (esPromoDia && monto < config.MIN_PROMO_DIA) {
+            alert("El monto mínimo para el Bono del Día es de $" + config.MIN_PROMO_DIA);
+            return;
+        }
+
+        // --- CONSTRUCCIÓN DEL MENSAJE ---
+        let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\n";
+        mensaje += "Quiero *CARGAR* $" + monto + ".";
+        
+        if (esNuevo) mensaje += "\n(Solicito Bono de Bienvenida 35%)";
+        if (esPromoDia) mensaje += "\n(Solicito Bono del Día)";
+        
+        mensaje += "\n\nEnvío el comprobante a continuación.";
+
         window.open("https://wa.me/" + encargado.numero + "?text=" + encodeURIComponent(mensaje), "_blank");
     }
 
@@ -34,24 +68,39 @@
         const text = id === 'cbu' ? window.VEGASBETT_CONFIG.CBU : window.VEGASBETT_CONFIG.ALIAS;
         navigator.clipboard.writeText(text).then(() => alert("Copiado: " + text));
     }
+
+    // Mostrar aviso visual de mínimos al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const aviso = document.getElementById('avisoMinimo');
+        if (urlParams.get('promo') === 'new') {
+            aviso.textContent = "Bono 35% Activo (Mínimo $" + window.VEGASBETT_CONFIG.MIN_NUEVO + ")";
+            aviso.style.display = "block";
+        } else if (urlParams.get('promo') === 'today') {
+            aviso.textContent = "Bono del Día Activo (Mínimo $" + window.VEGASBETT_CONFIG.MIN_PROMO_DIA + ")";
+            aviso.style.display = "block";
+        }
+    });
   </script>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <h2 class="center">Cargar Créditos</h2>
+      <p id="avisoMinimo" class="center" style="display:none; background: #c29c36; color: #000; padding: 5px; border-radius: 4px; font-weight: bold; font-size: 13px; margin-bottom: 10px;"></p>
+      
       <div class="form">
         <input type="text" id="nombre" placeholder="Tu nombre de usuario"/>
         <input type="number" id="monto" placeholder="Monto a cargar (ej: 5000)"/>
         
-        <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #333;">
+        <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #333; font-size: 14px;">
             <p><strong>Titular:</strong> Milagros Diana Maricel Quinonez</p>
-            <p><strong>Alias:</strong> Vegasbett <button onclick="copiar('alias')" style="font-size: 10px;">Copiar</button></p>
-            <p><strong>CBU:</strong> 0000085700274606489697 <button onclick="copiar('cbu')" style="font-size: 10px;">Copiar</button></p>
+            <p style="margin: 10px 0;"><strong>Alias:</strong> <span style="color: #c29c36;">Vegasbett</span> <button class="btn-copy" onclick="copiar('alias')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
+            <p><strong>CBU:</strong> <span style="color: #c29c36;">0000085700274606489697</span> <button class="btn-copy" onclick="copiar('cbu')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
         </div>
 
         <button class="btn ok" onclick="enviarCarga()">Informar Carga por WhatsApp</button>
-        <a href="index.html" class="btn secondary">Volver atrás</a>
+        <a href="index.html" class="btn secondary" style="display: block; text-align: center; margin-top: 10px; text-decoration: none;">Volver atrás</a>
       </div>
     </div>
   </div>

@@ -7,15 +7,17 @@
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
 
   <script>
-    // 1. CONFIGURACIÓN COMPLETA
+    // 1. CONFIGURACIÓN ACTUALIZADA
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
         JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
       },
-      PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }, // % por día
-      PROMO_MIN: 2000,
-      PROMO_MAX: 20000
+      PLATAFORMA_URL: "https://ganamosnet.club/home",
+      PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 },
+      MIN_CARGA_PROMO: 2000,
+      MIN_CARGA_NUEVO: 1000,
+      BONO_NUEVO_PORCENTAJE: 35
     };
 
     function inicializarPagina() {
@@ -45,8 +47,8 @@
         const promoText = document.getElementById('promoText');
 
         if (bonoHoy && ticker) {
-            promoText.textContent = "Hoy " + DIAS[diaSemana] + ": bono +" + bonoHoy + "% en cargas de $2.000 a $20.000.";
-            ticker.classList.remove('hidden'); // Esto hace que aparezca
+            promoText.textContent = "Hoy " + DIAS[diaSemana] + ": bono +" + bonoHoy + "% (Mínimo $" + config.MIN_CARGA_PROMO + ")";
+            ticker.classList.remove('hidden');
         }
 
         // --- EXTRAS ---
@@ -56,6 +58,10 @@
         if (document.getElementById('year')) {
             document.getElementById('year').textContent = ahora.getFullYear();
         }
+        
+        // Actualizar link de plataforma
+        const btnPlataforma = document.getElementById('btnPlataforma');
+        if (btnPlataforma) btnPlataforma.href = config.PLATAFORMA_URL;
     }
 
     window.addEventListener('DOMContentLoaded', inicializarPagina);
@@ -76,7 +82,7 @@
 
       <p class="center gold-legend">
         Página oficial de <strong>VEGASBETT</strong> — jugá distinto, jugá seguro.
-        <span class="gold-promo">Bono del 35% en tu primera carga (mínimo $1.000).</span>
+        <span class="gold-promo">Bono del 35% para nuevos (mínimo $1.000).</span>
       </p>
 
       <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today">
@@ -86,7 +92,7 @@
       </a>
 
       <div class="featured-actions" style="margin-top: 15px;">
-        <a class="btn external" href="https://ganamosnet.club/home" target="_blank">Ir a ganamosnet</a>
+        <a id="btnPlataforma" class="btn external" href="#" target="_blank">Ir a GanamosNet</a>
         <a class="btn bonus" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
       </div>
 
@@ -94,7 +100,7 @@
         <a class="btn warn" href="cargar.html">Quiero Cargar</a>
         <a class="btn" href="retirar.html">Quiero Retirar</a>
         <button class="btn ok" id="btnAtencionDinamica">Cargando atención...</button>
-        <button class="btn secondary" id="btnAyuda">Centro de Ayuda</button>
+        <button class="btn secondary" onclick="window.location.href='https://wa.me/5492235393540?text=Hola, necesito ayuda técnica.'">Centro de Ayuda</button>
       </div>
       
       <p class="center small sub" id="infoHorario" style="margin-top: 10px; font-size: 11px;"></p>

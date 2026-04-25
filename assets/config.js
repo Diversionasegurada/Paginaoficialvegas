@@ -4,7 +4,7 @@ window.VEGASBETT_CONFIG = {
   MARCA: "VegasBett",
 
   // Números (sin + ni espacios)
-  NUMERO_PRINCIPAL: "5492236631329",
+  NUMERO_PRINCIPAL: "5492235393540",
   NUMERO_RESPALDO:  "5492236914771",
 
   // Datos bancarios

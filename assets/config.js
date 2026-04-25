@@ -1,53 +1,40 @@
-// Configuración central — VegasBett (v18)
+// Configuración central — VegasBett (v18.1)
 window.VEGASBETT_CONFIG = {
-  // Marca
   MARCA: "VegasBett",
 
-  // Números (sin + ni espacios)
-  NUMERO_PRINCIPAL: "5492235393540",
-  NUMERO_RESPALDO:  "5492236914771",
+  // TURNOS DE ATENCIÓN
+  ATENCION: {
+    CLARA: {
+      nombre: "Clara",
+      numero: "5492236631329",
+      inicio: 8,  // Desde las 08:00 hs
+      fin: 20     // Hasta las 20:00 hs
+    },
+    JULI: {
+      nombre: "Juli",
+      numero: "5492235393540",
+      inicio: 20, // Desde las 20:00 hs
+      fin: 8      // Hasta las 08:00 hs
+    }
+  },
 
   // Datos bancarios
   CBU: "0000085700274606489697",
   ALIAS: "Vegasbett",
   TITULAR: "Milagros Diana Maricel Quinonez",
 
-  // Preview / privacidad
   SHARE_PREVIEW: true,
   OG_IMAGE: "assets/portada_paginaweb.png",
   NO_INDEX: true,
-
-  // Pixel (opcional)
-  TRACKING_ENABLED: false,
-  PIXEL_ID: "24100361799629508",
-
-  // Admin
   EMERGENCY_PIN: "4321",
-
-  // Age gate
   AGE_GATE_ENABLED: true,
   EDAD_MINIMA: 18,
 
-  // ===== Promos =====
-  // Mostrar/ocultar banner (o usar ?promos=off / ?promos=on en la URL)
+  // Promos
   SHOW_PROMO_TICKER: true,
-
-  // Rango válido para promo del día
   PROMO_MIN: 2000,
   PROMO_MAX: 20000,
-
-  // Porcentaje por día (0=Dom,1=Lun,...6=Sáb)
-  PROMO_BONUS_BY_DAY: {
-    0: 10, // Domingo
-    1: 5, // Lunes
-    2: 10, // Martes
-    3: 5, // Miércoles
-    4: 5, // Jueves
-    5: 10, // Viernes
-    6: 10  // Sábado
-  },
-
-  // Bono bienvenida
+  PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 },
   NEW_USER_BONO: 35,
   NEW_MIN: 500
 };

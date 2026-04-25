@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VegasBett — Centro de Atención</title>
 
-  <!-- Estilos y config -->
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
   <script src="assets/config.js?v=18"></script>
   <script defer src="assets/app.js?v=18"></script>
 
-  <!-- Metas dinámicas (noindex + OG) -->
   <script>
   (function(){
     const C = window.VEGASBETT_CONFIG || {};
@@ -34,116 +32,82 @@
 <body>
   <div class="container">
     <div class="card">
-      <!-- Header -->
       <div class="header">
         <div class="brand">
           <span>🎰 VegasBett</span>
           <span class="badge">Atención 24/7</span>
         </div>
-        <!-- Admin oculto por defecto. Mostrar solo con ?admin=1 -->
         <span class="badge-pill badge-admin hidden" id="adminToggle" title="Panel rápido">Admin</span>
       </div>
 
-      <!-- Logo compacto -->
       <div class="logo-hero">
         <img src="assets/portada_paginaweb.png" alt="VegasBett" class="logo-img"/>
       </div>
 
-      <!-- Título -->
       <h1 class="center">¿Qué necesitás hacer hoy?</h1>
       <p class="center sub">Uso interno.</p>
 
-      <!-- Leyenda dorada -->
       <p class="center gold-legend">
         Página oficial de <strong>VEGASBETT</strong> — jugá distinto, jugá seguro.
         <span class="gold-promo">Bono del 35% en tu <u>primera carga</u> (mínimo $500).</span>
       </p>
 
-      <!-- Banner de promos (texto lo arma JS) -->
       <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today" rel="nofollow">
         <span class="promo-led" aria-hidden="true"></span>
         <span id="promoText">Promos de hoy activas</span>
         <span class="promo-cta">Aprovechar →</span>
       </a>
 
-      <!-- Acciones destacadas -->
       <div class="featured-actions">
         <a class="btn external" data-ico="🌐" href="https://ganamos.io/" target="_blank" rel="noopener noreferrer">Ir a ganamos.io</a>
         <a class="btn bonus" data-ico="🎁" id="btnSoyNuevo" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
         <button class="btn secondary" data-ico="ℹ️" id="btnMasInfo">Más info</button>
       </div>
 
-      <!-- Botonera principal (Cargar/Retirar arriba) -->
       <div class="grid">
         <a class="btn warn" data-ico="💵" href="cargar.html">Quiero Cargar</a>
         <a class="btn" data-ico="💸" href="retirar.html">Quiero Retirar</a>
-        <button class="btn ok" data-ico="📞" id="btnPrincipal">Número principal (WhatsApp)</button>
-        <button class="btn secondary" data-ico="🛟" id="btnRespaldo">En caso de reclamo (WhatsApp)</button>
+        
+        <button class="btn ok" data-ico="📞" id="btnAtencionDinamica">Cargando atención...</button>
+        
+        <button class="btn secondary" data-ico="🛟" id="btnRespaldo">Centro de Ayuda</button>
       </div>
+      <p class="center small sub" id="infoHorario" style="margin-top: 10px; font-size: 11px;"></p>
 
-      <!-- Panel Admin (solo si ?admin=1 y con PIN) -->
       <div id="adminPanel" class="admin-panel hidden">
         <h3>Panel rápido</h3>
-        <p class="sub">Actualizá números al vuelo o generá un link compartible.</p>
+        <p class="sub">Actualizá números al vuelo.</p>
         <div class="form">
-          <div><label>PIN</label><input id="pin" type="password" placeholder="Ingresá tu PIN"/></div>
+          <div><label>PIN</label><input id="pin" type="password" placeholder="PIN"/></div>
           <div><label>Número principal</label><input id="nPrincipal" type="text" placeholder="549..."/></div>
-          <div><label>Número respaldo (reclamos)</label><input id="nRespaldo" type="text" placeholder="549..."/></div>
           <div class="cta-row">
             <button id="aplicarAdmin" class="btn ok">Aplicar ahora</button>
-            <button id="genLink" class="btn secondary">Crear link compartible</button>
           </div>
-          <div class="copy"><input id="linkResult" type="text" readonly value=""/><button class="copybtn" data-copy="#linkResult">Copiar link</button></div>
-          <p class="small">Tip: compartí ese link y la página usará esos números automáticamente (solo en esa sesión).</p>
         </div>
       </div>
 
-      <!-- Footer -->
       <footer class="center">© <span id="year"></span> VegasBett • Jugá responsable • + 18 años.</footer>
 
-      <!-- Modal Más info / Spech -->
-      <div id="modalInfo" class="vb-modal hidden" aria-hidden="true" role="dialog" aria-labelledby="modalInfoTitle">
+      <div id="modalInfo" class="vb-modal hidden" aria-hidden="true" role="dialog">
         <div class="vb-modal__backdrop" data-close="1"></div>
         <div class="vb-modal__card">
           <div class="vb-modal__head">
-            <h3 id="modalInfoTitle">Bono de Bienvenida 35%</h3>
-            <button class="vb-modal__close" id="modalClose" aria-label="Cerrar">✕</button>
+            <h3>Bono de Bienvenida 35%</h3>
+            <button class="vb-modal__close" id="modalClose">✕</button>
           </div>
           <div class="vb-modal__body">
-            <p class="small" style="margin-top:-6px">
-              *Válido en la <strong>primera</strong> carga, con un mínimo de <strong>$500</strong> (ARS).
-            </p>
-<pre id="spechText" class="vb-pre">🎰 ¡BIENVENID@ A VEGASBETT! 🎰
-💥 Estás a punto de entrar al lugar donde TODO puede pasar...
-🔥 BONO EXCLUSIVO del +35% en tu primera recarga 💸
-
-🎯 ¿Estás list@ para empezar con ventaja?
-Esto es lo que te espera:
-
-🟣 Slots explosivos con premios que crecen minuto a minuto
-🟡 Casino en vivo 24/7 con crupiers reales
-💸 Cargas desde $ 500 - Minimo de retiro $ 5.000 y lo hacemos al instantáneos
-📈 Hasta $250.000 por día – sin vueltas, sin excusas
-
-📝 Decime tu nombre o apodo y te creo la cuenta en segundos
-
-🔐 Plataforma 100% segura, verificada y con atención personalizada (Ganamos.io)
-🍀 Hoy es el día. Hoy puede ser tu primera GRAN jugada.
-
-🔥 ¡Respondé este mensaje y activá tu lugar en la mesa!
-🎉 VegasBett te espera… con los dados cargados a tu favor 🎲💰</pre>
+            <p class="small">*Válido en la primera carga (mín. $500).</p>
+            <pre id="spechText" class="vb-pre">🎰 ¡BIENVENID@ A VEGASBETT! 🎰
+... (tu speech actual) ...</pre>
           </div>
           <div class="vb-modal__foot">
             <button class="btn secondary" id="copySpech" data-ico="📋">Copiar texto</button>
-            <button class="btn ok" id="modalOk" data-ico="✅">Entendido</button>
+            <button class="btn ok" id="modalOk">Entendido</button>
           </div>
         </div>
       </div>
-      <!-- /Modal -->
     </div>
   </div>
-
   <div id="toast" class="toast">Copiado</div>
 </body>
 </html>
-

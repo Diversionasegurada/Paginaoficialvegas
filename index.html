@@ -4,40 +4,67 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VegasBett — Centro de Atención</title>
-
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
-  <script src="assets/config.js?v=18"></script>
-  <script defer src="assets/app.js?v=18"></script>
 
   <script>
-  (function(){
-    const C = window.VEGASBETT_CONFIG || {};
-    if (C.NO_INDEX) {
-      var m = document.createElement('meta');
-      m.name = 'robots'; m.content = 'noindex,nofollow';
-      document.head.appendChild(m);
+    // 1. CONFIGURACIÓN INTEGRADA (Para que no falle nunca)
+    window.VEGASBETT_CONFIG = {
+      ATENCION: {
+        CLARA: { nombre: "Clara", numero: "5492235393540", inicio: 8, fin: 20 },
+        JULI: { nombre: "Juli", numero: "5492236914771", inicio: 20, fin: 8 }
+      },
+      MARCA: "VegasBett",
+      CBU: "0000085700274606489697",
+      ALIAS: "Vegasbett",
+      TITULAR: "Milagros Diana Maricel Quinonez"
+    };
+
+    // 2. LÓGICA DE TURNOS
+    function inicializarPagina() {
+        const hora = new Date().getHours();
+        const config = window.VEGASBETT_CONFIG.ATENCION;
+        let encargado;
+
+        // Determinamos quién atiende
+        if (hora >= config.CLARA.inicio && hora < config.CLARA.fin) {
+            encargado = config.CLARA;
+        } else {
+            encargado = config.JULI;
+        }
+
+        // Actualizamos los elementos de la página
+        const btnAtencion = document.getElementById('btnAtencionDinamica');
+        const infoHorario = document.getElementById('infoHorario');
+        const yearSpan = document.getElementById('year');
+
+        if (btnAtencion) {
+            btnAtencion.textContent = "Chatear con " + encargado.nombre + " (Online)";
+            btnAtencion.onclick = function() {
+                const mensaje = encodeURIComponent("Hola " + encargado.nombre + ", necesito atención en VegasBett.");
+                window.open("https://wa.me/" + encargado.numero + "?text=" + mensaje, "_blank");
+            };
+        }
+
+        if (infoHorario) {
+            infoHorario.textContent = "Atención: Clara (08 a 20hs) • Juli (20 a 08hs)";
+        }
+
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+        
+        console.log("Sistema de turnos activado para: " + encargado.nombre);
     }
-    if (C.SHARE_PREVIEW !== false) {
-      var t=document.createElement('meta'); t.setAttribute('property','og:title');
-      t.content=(C.MARCA||'VegasBett')+' – Cargas y Retiros'; document.head.appendChild(t);
-      var d=document.createElement('meta'); d.setAttribute('property','og:description');
-      d.content='Atención por WhatsApp. Cargas y retiros.'; document.head.appendChild(d);
-      var i=document.createElement('meta'); i.setAttribute('property','og:image');
-      i.content=(C.OG_IMAGE||'assets/portada_paginaweb.png'); document.head.appendChild(i);
-    }
-    var tc=document.createElement('meta'); tc.name='theme-color'; tc.content='#13141b'; document.head.appendChild(tc);
-  })();
+
+    // Ejecutar cuando cargue el DOM
+    window.addEventListener('DOMContentLoaded', inicializarPagina);
   </script>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <div class="header">
-        <div class="brand">
-          <span>🎰 VegasBett</span>
-          <span class="badge">Atención 24/7</span>
-        </div>
-        <span class="badge-pill badge-admin hidden" id="adminToggle" title="Panel rápido">Admin</span>
+        <div class="brand"><span>🎰 VegasBett</span><span class="badge">Atención 24/7</span></div>
       </div>
 
       <div class="logo-hero">
@@ -49,65 +76,27 @@
 
       <p class="center gold-legend">
         Página oficial de <strong>VEGASBETT</strong> — jugá distinto, jugá seguro.
-        <span class="gold-promo">Bono del 35% en tu <u>primera carga</u> (mínimo $500).</span>
+        <span class="gold-promo">Bono del 35% en tu primera carga (mínimo $500).</span>
       </p>
 
-      <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today" rel="nofollow">
-        <span class="promo-led" aria-hidden="true"></span>
-        <span id="promoText">Promos de hoy activas</span>
-        <span class="promo-cta">Aprovechar →</span>
-      </a>
-
       <div class="featured-actions">
-        <a class="btn external" data-ico="🌐" href="https://ganamos.io/" target="_blank" rel="noopener noreferrer">Ir a ganamos.io</a>
-        <a class="btn bonus" data-ico="🎁" id="btnSoyNuevo" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
-        <button class="btn secondary" data-ico="ℹ️" id="btnMasInfo">Más info</button>
+        <a class="btn external" href="https://ganamos.io/" target="_blank">Ir a ganamos.io</a>
+        <a class="btn bonus" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
       </div>
 
       <div class="grid">
-        <a class="btn warn" data-ico="💵" href="cargar.html">Quiero Cargar</a>
-        <a class="btn" data-ico="💸" href="retirar.html">Quiero Retirar</a>
+        <a class="btn warn" href="cargar.html">Quiero Cargar</a>
+        <a class="btn" href="retirar.html">Quiero Retirar</a>
         
-        <button class="btn ok" data-ico="📞" id="btnAtencionDinamica">Cargando atención...</button>
+        <button class="btn ok" id="btnAtencionDinamica">Cargando atención...</button>
         
-        <button class="btn secondary" data-ico="🛟" id="btnRespaldo">Centro de Ayuda</button>
+        <button class="btn secondary" onclick="alert('Iniciando soporte...');">Centro de Ayuda</button>
       </div>
+      
       <p class="center small sub" id="infoHorario" style="margin-top: 10px; font-size: 11px;"></p>
 
-      <div id="adminPanel" class="admin-panel hidden">
-        <h3>Panel rápido</h3>
-        <p class="sub">Actualizá números al vuelo.</p>
-        <div class="form">
-          <div><label>PIN</label><input id="pin" type="password" placeholder="PIN"/></div>
-          <div><label>Número principal</label><input id="nPrincipal" type="text" placeholder="549..."/></div>
-          <div class="cta-row">
-            <button id="aplicarAdmin" class="btn ok">Aplicar ahora</button>
-          </div>
-        </div>
-      </div>
-
       <footer class="center">© <span id="year"></span> VegasBett • Jugá responsable • + 18 años.</footer>
-
-      <div id="modalInfo" class="vb-modal hidden" aria-hidden="true" role="dialog">
-        <div class="vb-modal__backdrop" data-close="1"></div>
-        <div class="vb-modal__card">
-          <div class="vb-modal__head">
-            <h3>Bono de Bienvenida 35%</h3>
-            <button class="vb-modal__close" id="modalClose">✕</button>
-          </div>
-          <div class="vb-modal__body">
-            <p class="small">*Válido en la primera carga (mín. $500).</p>
-            <pre id="spechText" class="vb-pre">🎰 ¡BIENVENID@ A VEGASBETT! 🎰
-... (tu speech actual) ...</pre>
-          </div>
-          <div class="vb-modal__foot">
-            <button class="btn secondary" id="copySpech" data-ico="📋">Copiar texto</button>
-            <button class="btn ok" id="modalOk">Entendido</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
-  <div id="toast" class="toast">Copiado</div>
 </body>
 </html>

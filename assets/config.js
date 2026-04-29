@@ -19,9 +19,9 @@ window.VEGASBETT_CONFIG = {
   },
 
   // Datos bancarios
-  CBU: "0000085700274606489697",
-  ALIAS: "Vegasbett",
-  TITULAR: "Milagros Diana Maricel Quinonez",
+  CBU: "0000003100056935839518",
+  ALIAS: "vegass.bet",
+  TITULAR: "Priscila Correa",
 
   SHARE_PREVIEW: true,
   OG_IMAGE: "assets/portada_paginaweb.png",

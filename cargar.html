@@ -6,12 +6,13 @@
   <title>Cargar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
   <script>
-    // 1. CONFIGURACIÓN DE TURNOS Y MONTOS
+    // 1. CONFIGURACIÓN CENTRALIZADA
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
         JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
       },
+      // AQUÍ CAMBIÁS LOS DATOS BANCARIOS UNA SOLA VEZ
       CBU: "0000003100056935839518",
       ALIAS: "vegass.bet",
       TITULAR: "Priscila Correa",
@@ -31,12 +32,10 @@
         const montoStr = document.getElementById('monto').value;
         const monto = parseInt(montoStr);
         
-        // Verificamos si viene de una promo específica por la URL
         const urlParams = new URLSearchParams(window.location.search);
         const esNuevo = urlParams.get('promo') === 'new';
         const esPromoDia = urlParams.get('promo') === 'today';
 
-        // --- VALIDACIONES ---
         if(!nombre || !montoStr) { 
             alert("Por favor completá tu nombre y el monto."); 
             return; 
@@ -52,7 +51,6 @@
             return;
         }
 
-        // --- CONSTRUCCIÓN DEL MENSAJE ---
         let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\n";
         mensaje += "Quiero *CARGAR* $" + monto + ".";
         
@@ -69,15 +67,23 @@
         navigator.clipboard.writeText(text).then(() => alert("Copiado: " + text));
     }
 
-    // Mostrar aviso visual de mínimos al cargar la página
+    // Esta función actualiza el texto visual de la página con los datos del CONFIG
     window.addEventListener('DOMContentLoaded', () => {
+        const config = window.VEGASBETT_CONFIG;
+        
+        // Actualizar datos bancarios visuales
+        document.getElementById('display-titular').textContent = config.TITULAR;
+        document.getElementById('display-alias').textContent = config.ALIAS;
+        document.getElementById('display-cbu').textContent = config.CBU;
+
+        // Aviso de mínimos
         const urlParams = new URLSearchParams(window.location.search);
         const aviso = document.getElementById('avisoMinimo');
         if (urlParams.get('promo') === 'new') {
-            aviso.textContent = "Bono 35% Activo (Mínimo $" + window.VEGASBETT_CONFIG.MIN_NUEVO + ")";
+            aviso.textContent = "Bono 35% Activo (Mínimo $" + config.MIN_NUEVO + ")";
             aviso.style.display = "block";
         } else if (urlParams.get('promo') === 'today') {
-            aviso.textContent = "Bono del Día Activo (Mínimo $" + window.VEGASBETT_CONFIG.MIN_PROMO_DIA + ")";
+            aviso.textContent = "Bono del Día Activo (Mínimo $" + config.MIN_PROMO_DIA + ")";
             aviso.style.display = "block";
         }
     });
@@ -94,9 +100,9 @@
         <input type="number" id="monto" placeholder="Monto a cargar (ej: 5000)"/>
         
         <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #333; font-size: 14px;">
-            <p><strong>Titular:</strong> Milagros Diana Maricel Quinonez</p>
-            <p style="margin: 10px 0;"><strong>Alias:</strong> <span style="color: #c29c36;">Vegasbett</span> <button class="btn-copy" onclick="copiar('alias')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
-            <p><strong>CBU:</strong> <span style="color: #c29c36;">0000085700274606489697</span> <button class="btn-copy" onclick="copiar('cbu')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
+            <p><strong>Titular:</strong> <span id="display-titular">Cargando...</span></p>
+            <p style="margin: 10px 0;"><strong>Alias:</strong> <span id="display-alias" style="color: #c29c36;">Cargando...</span> <button class="btn-copy" onclick="copiar('alias')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
+            <p><strong>CBU:</strong> <span id="display-cbu" style="color: #c29c36;">Cargando...</span> <button class="btn-copy" onclick="copiar('cbu')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
         </div>
 
         <button class="btn ok" onclick="enviarCarga()">Informar Carga por WhatsApp</button>

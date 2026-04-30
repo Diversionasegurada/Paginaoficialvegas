@@ -6,23 +6,20 @@
   <title>Cargar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
   <style>
-    /* Estilo para las notificaciones de prueba social */
     #social-proof {
       position: fixed;
       bottom: 20px;
       left: 20px;
       background: rgba(13, 22, 33, 0.95);
-      border: 1px solid var(--gold);
+      border: 1px solid #d4af37;
       padding: 12px 18px;
       border-radius: 12px;
       font-size: 13px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       display: none;
       z-index: 9999;
-      animation: slideUp 0.5s ease-out;
     }
-    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .btn-copy { transition: all 0.3s; border: none; background: #333; color: white; border-radius: 4px; }
+    .btn-copy { transition: all 0.3s; border: none; background: #333; color: white; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
   </style>
 
   <script>
@@ -36,6 +33,7 @@
       TITULAR: "Priscila Correa",
       MIN_NUEVO: 1000,
       MIN_PROMO_DIA: 4000,
+      // 0: Dom, 1: Lun, 2: Mar, 3: Mie, 4: Jue, 5: Vie, 6: Sab
       PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
@@ -45,21 +43,23 @@
         const encargado = (ahora.getHours() >= config.ATENCION.CLARA.inicio && ahora.getHours() < config.ATENCION.CLARA.fin) ? config.ATENCION.CLARA : config.ATENCION.JULI;
         const nombre = document.getElementById('nombre').value.trim();
         const monto = parseInt(document.getElementById('monto').value);
+        
         const urlParams = new URLSearchParams(window.location.search);
-        const esNuevo = urlParams.get('promo') === 'new';
-        const esPromoDia = urlParams.get('promo') === 'today';
+        const tipoPromo = urlParams.get('promo');
 
         if(!nombre || !monto) { alert("Por favor completá los datos."); return; }
 
         let mensaje = `Hola ${encargado.nombre}, soy *${nombre}*.\n`;
-        if (esPromoDia) {
+        
+        if (tipoPromo === 'today') {
             const bono = config.PROMO_BONUS_BY_DAY[ahora.getDay()];
-            mensaje += `Quiero cargar $${monto} con el *Bono del Día ${bono}%* 🚀`;
-        } else if (esNuevo) {
+            mensaje += `Quiero cargar $${monto} con mi *Bono del Día ${bono}%* 🚀`;
+        } else if (tipoPromo === 'new') {
             mensaje += `Quiero cargar $${monto} con mi *Bono de Bienvenida 35%* 🎁`;
         } else {
             mensaje += `Quiero *CARGAR* $${monto}.`;
         }
+
         window.open(`https://wa.me/${encargado.numero}?text=${encodeURIComponent(mensaje + "\n\nEnvío comprobante.")}`, "_blank");
     }
 
@@ -73,29 +73,38 @@
         });
     }
 
-    // Lógica de Calculadora y Social Proof
     window.addEventListener('DOMContentLoaded', () => {
         const config = window.VEGASBETT_CONFIG;
         document.getElementById('display-titular').textContent = config.TITULAR;
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
-        // Calculadora en tiempo real
+        // CALCULADORA CORREGIDA
         document.getElementById('monto').addEventListener('input', (e) => {
             const monto = parseInt(e.target.value) || 0;
             const urlParams = new URLSearchParams(window.location.search);
-            let porc = urlParams.get('promo') === 'new' ? 35 : (urlParams.get('promo') === 'today' ? config.PROMO_BONUS_BY_DAY[new Date().getDay()] : 0);
+            const tipoPromo = urlParams.get('promo');
             
+            let porcentaje = 0;
+            if (tipoPromo === 'new') {
+                porcentaje = 35;
+            } else if (tipoPromo === 'today') {
+                porcentaje = config.PROMO_BONUS_BY_DAY[new Date().getDay()];
+            }
+
             const aviso = document.getElementById('avisoMinimo');
-            if (monto > 0 && porc > 0) {
+            if (monto > 0 && porcentaje > 0) {
+                const extra = Math.floor(monto * (porcentaje / 100));
                 aviso.style.display = "block";
-                aviso.innerHTML = `Carga: $${monto} + Bono: $${Math.floor(monto*(porc/100))} <br> <strong>Créditos a recibir: $${monto + Math.floor(monto*(porc/100))}</strong>`;
+                aviso.innerHTML = `Carga: $${monto} + Bono (${porcentaje}%): $${extra} <br> <strong>Créditos a recibir: $${monto + extra}</strong>`;
+            } else {
+                aviso.style.display = "none";
             }
         });
 
-        // Social Proof (Simulador de actividad)
-        const nombres = ["Marcos", "Facu", "Dany", "Clari", "Gabi", "Santi", "Pato", "Lu"];
-        const acciones = ["cargó $3.000", "retiró $12.400", "cargó $1.500", "solicitó bono 35%", "cargó $10.000"];
+        // Social Proof
+        const nombres = ["Marcos", "Lucas", "Damián", "Claudio", "Gaby", "Santi", "Patricio", "Luis"];
+        const acciones = ["cargó $3.000", "retiró $15.400", "cargó $1.500", "cargó $10.000", "retiró $8.200"];
         setInterval(() => {
             if (Math.random() > 0.7) {
                 const sp = document.getElementById('social-proof');
@@ -103,7 +112,7 @@
                 sp.style.display = "block";
                 setTimeout(() => sp.style.display = "none", 4000);
             }
-        }, 8000);
+        }, 9000);
     });
   </script>
 </head>

@@ -5,107 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VegasBett — Centro de Atención</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
-
   <script>
-    // 1. CONFIGURACIÓN ACTUALIZADA
+    // CONFIGURACIÓN CENTRALIZADA
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
         JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
       },
-      PLATAFORMA_URL: "https://ganamosnet.club/home",
-      PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 },
-      MIN_CARGA_PROMO: 4000,
-      MIN_CARGA_NUEVO: 1000,
-      BONO_NUEVO_PORCENTAJE: 35
+      PLATAFORMA_URL: "https://ganamosnet.club/home"
     };
 
-    function inicializarPagina() {
+    window.addEventListener('DOMContentLoaded', () => {
         const ahora = new Date();
-        const hora = ahora.getHours();
-        const diaSemana = ahora.getDay();
+        const horaActual = ahora.getHours();
         const config = window.VEGASBETT_CONFIG;
         
-        // --- LÓGICA DE TURNOS ---
-        let encargado = (hora >= config.ATENCION.CLARA.inicio && hora < config.ATENCION.CLARA.fin) 
-                        ? config.ATENCION.CLARA 
-                        : config.ATENCION.JULI;
+        // Determinar quién atiende ahora
+        const encargado = (horaActual >= config.ATENCION.CLARA.inicio && horaActual < config.ATENCION.CLARA.fin) 
+                          ? config.ATENCION.CLARA 
+                          : config.ATENCION.JULI;
 
+        // Actualizar botón de atención
         const btnAtencion = document.getElementById('btnAtencionDinamica');
-        if (btnAtencion) {
-            btnAtencion.textContent = "Chatear con " + encargado.nombre + " (Online)";
-            btnAtencion.onclick = () => {
-                const mensaje = encodeURIComponent("Hola " + encargado.nombre + ", necesito atención en VegasBett.");
-                window.open("https://wa.me/" + encargado.numero + "?text=" + mensaje, "_blank");
-            };
-        }
+        btnAtencion.textContent = `Chatear con ${encargado.nombre} (Online)`;
+        btnAtencion.onclick = () => {
+            const msj = encodeURIComponent(`Hola ${encargado.nombre}, necesito ayuda con mi cuenta de VegasBett.`);
+            window.open(`https://wa.me/${encargado.numero}?text=${msj}`, "_blank");
+        };
 
-        // --- LÓGICA DEL BANNER DE BONO ---
-        const DIAS = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-        const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
-        const ticker = document.getElementById('promoTicker');
-        const promoText = document.getElementById('promoText');
-
-        if (bonoHoy && ticker) {
-            promoText.textContent = "Hoy " + DIAS[diaSemana] + ": bono +" + bonoHoy + "% (Mínimo $" + config.MIN_CARGA_PROMO + ")";
-            ticker.classList.remove('hidden');
-        }
-
-        // --- EXTRAS ---
-        if (document.getElementById('infoHorario')) {
-            document.getElementById('infoHorario').textContent = "Atención: Clara (08 a 20hs) • Juli (20 a 08hs)";
-        }
-        if (document.getElementById('year')) {
-            document.getElementById('year').textContent = ahora.getFullYear();
-        }
-        
-        // Actualizar link de plataforma
-        const btnPlataforma = document.getElementById('btnPlataforma');
-        if (btnPlataforma) btnPlataforma.href = config.PLATAFORMA_URL;
-    }
-
-    window.addEventListener('DOMContentLoaded', inicializarPagina);
+        // Footer y links
+        document.getElementById('year').textContent = ahora.getFullYear();
+        document.getElementById('btnPlataforma').href = config.PLATAFORMA_URL;
+    });
   </script>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <div class="header">
-        <div class="brand"><span>🎰 VegasBett</span><span class="badge">Atención 24/7</span></div>
-      </div>
-
-      <div class="logo-hero">
-        <img src="assets/portada_paginaweb.png" alt="VegasBett" class="logo-img"/>
-      </div>
-
-      <h1 class="center">¿Qué necesitás hacer hoy?</h1>
-
-      <p class="center gold-legend">
-        Página oficial de <strong>VEGASBETT</strong> — jugá distinto, jugá seguro.
-        <span class="gold-promo">Bono del 35% para nuevos (mínimo $1.000).</span>
-      </p>
-
-      <a id="promoTicker" class="promo-ticker hidden" href="cargar.html?promo=today">
-        <span class="promo-led"></span>
-        <span id="promoText">Cargando promos...</span>
-        <span class="promo-cta">Aprovechar →</span>
-      </a>
-
-      <div class="featured-actions" style="margin-top: 15px;">
-        <a id="btnPlataforma" class="btn external" href="#" target="_blank">Ir a GanamosNet</a>
-        <a class="btn bonus" href="cargar.html?promo=new">Soy nuevo (bono 35%)</a>
-      </div>
-
-      <div class="grid">
-        <a class="btn warn" href="cargar.html">Quiero Cargar</a>
-        <a class="btn" href="retirar.html">Quiero Retirar</a>
-        <button class="btn ok" id="btnAtencionDinamica">Cargando atención...</button>
-        <button class="btn secondary" onclick="window.location.href='https://wa.me/5492235393540?text=Hola, necesito ayuda técnica.'">Centro de Ayuda</button>
+      <!-- Encabezado con Estilo -->
+      <div class="brand center" style="font-size: 24px; font-weight: bold; color: #d4af37; margin-bottom: 10px;">
+        🎰 <span>VegasBett</span>
       </div>
       
-      <p class="center small sub" id="infoHorario" style="margin-top: 10px; font-size: 11px;"></p>
+      <!-- Imagen de Portada -->
+      <div class="logo-hero">
+        <img src="assets/portada_paginaweb.png" alt="VegasBett" style="width:100%; border-radius:12px; margin-bottom: 15px; border: 1px solid #333;"/>
+      </div>
 
-      <footer class="center">© <span id="year"></span> VegasBett • Jugá responsable • + 18 años.</footer>
+      <h1 class="center" style="font-size: 1.2rem; margin-bottom: 20px;">Panel de Usuario</h1>
+
+      <!-- Acciones Principales -->
+      <div class="featured-actions">
+        <a id="btnPlataforma" class="btn external" href="#" target="_blank" style="display: block; text-align: center; text-decoration: none; margin-bottom: 10px;">Entrar a Jugar</a>
+        <a class="btn bonus" href="cargar.html?promo=new" style="display: block; text-align: center; text-decoration: none; background: #c29c36; color: #000; font-weight: bold;">Bono Bienvenida (35%)</a>
+      </div>
+
+      <!-- Accesos Rápidos -->
+      <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+        <a class="btn warn" href="cargar.html?promo=today" style="text-align: center; text-decoration: none;">Cargar</a>
+        <a class="btn" href="retirar.html" style="text-align: center; text-decoration: none;">Retirar</a>
+      </div>
+      
+      <!-- Atención al Cliente Dinámica -->
+      <button class="btn ok" id="btnAtencionDinamica" style="width:100%; margin-top: 15px; padding: 12px; cursor: pointer;">
+        Conectando con soporte...
+      </button>
+
+      <footer class="center" style="margin-top: 25px; font-size: 11px; opacity: 0.5;">
+        © <span id="year"></span> VegasBett • +18 Jugar con responsabilidad
+      </footer>
     </div>
   </div>
 </body>

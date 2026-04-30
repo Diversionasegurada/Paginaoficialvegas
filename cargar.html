@@ -12,18 +12,22 @@
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
         JULI: { nombre: "Juli", numero: "5492235393540", inicio: 20, fin: 8 }
       },
-      // AQUÍ CAMBIÁS LOS DATOS BANCARIOS UNA SOLA VEZ
       CBU: "0000003100056935839518",
       ALIAS: "vegass.bet",
       TITULAR: "Priscila Correa",
       MIN_NUEVO: 1000,
-      MIN_PROMO_DIA: 4000
+      MIN_PROMO_DIA: 4000,
+      // Configuración de bonos por día (0: Domingo, 1: Lunes, etc.)
+      PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
     function enviarCarga() {
-        const hora = new Date().getHours();
+        const ahora = new Date();
+        const hora = ahora.getHours();
+        const diaSemana = ahora.getDay(); // 0 a 6
         const config = window.VEGASBETT_CONFIG;
         const turnos = config.ATENCION;
+        const DIAS_NOMBRES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
         
         // Detectar encargado por horario
         const encargado = (hora >= turnos.CLARA.inicio && hora < turnos.CLARA.fin) ? turnos.CLARA : turnos.JULI;
@@ -41,21 +45,28 @@
             return; 
         }
 
+        // --- VALIDACIONES DE MÍNIMOS ---
         if (esNuevo && monto < config.MIN_NUEVO) {
             alert("El monto mínimo para el Bono de Bienvenida (35%) es de $" + config.MIN_NUEVO);
             return;
         }
-
         if (esPromoDia && monto < config.MIN_PROMO_DIA) {
             alert("El monto mínimo para el Bono del Día es de $" + config.MIN_PROMO_DIA);
             return;
         }
 
+        // --- CONSTRUCCIÓN DEL MENSAJE INTELIGENTE ---
         let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\n";
-        mensaje += "Quiero *CARGAR* $" + monto + ".";
         
-        if (esNuevo) mensaje += "\n(Solicito Bono de Bienvenida 35%)";
-        if (esPromoDia) mensaje += "\n(Solicito Bono del Día)";
+        if (esPromoDia) {
+            const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
+            const nombreDia = DIAS_NOMBRES[diaSemana];
+            mensaje += "Quiero cargar $" + monto + " con mi *" + bonoHoy + "% de Bono del Día " + nombreDia + "* 🚀";
+        } else if (esNuevo) {
+            mensaje += "Quiero cargar $" + monto + " y solicitar mi *Bono de Bienvenida del 35%* 🎁";
+        } else {
+            mensaje += "Quiero *CARGAR* $" + monto + ".";
+        }
         
         mensaje += "\n\nEnvío el comprobante a continuación.";
 
@@ -67,23 +78,25 @@
         navigator.clipboard.writeText(text).then(() => alert("Copiado: " + text));
     }
 
-    // Esta función actualiza el texto visual de la página con los datos del CONFIG
     window.addEventListener('DOMContentLoaded', () => {
         const config = window.VEGASBETT_CONFIG;
+        const ahora = new Date();
+        const diaSemana = ahora.getDay();
         
         // Actualizar datos bancarios visuales
         document.getElementById('display-titular').textContent = config.TITULAR;
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
-        // Aviso de mínimos
+        // Aviso dinámico de mínimos en pantalla
         const urlParams = new URLSearchParams(window.location.search);
         const aviso = document.getElementById('avisoMinimo');
         if (urlParams.get('promo') === 'new') {
             aviso.textContent = "Bono 35% Activo (Mínimo $" + config.MIN_NUEVO + ")";
             aviso.style.display = "block";
         } else if (urlParams.get('promo') === 'today') {
-            aviso.textContent = "Bono del Día Activo (Mínimo $" + config.MIN_PROMO_DIA + ")";
+            const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
+            aviso.textContent = "Bono del Día +" + bonoHoy + "% Activo (Mínimo $" + config.MIN_PROMO_DIA + ")";
             aviso.style.display = "block";
         }
     });

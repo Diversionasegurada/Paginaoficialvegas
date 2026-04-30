@@ -5,8 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cargar — VegasBett</title>
   <link rel="stylesheet" href="assets/styles.css?v=18"/>
+  <style>
+    /* Estilo para las notificaciones de prueba social */
+    #social-proof {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(13, 22, 33, 0.95);
+      border: 1px solid var(--gold);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 9999;
+      animation: slideUp 0.5s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .btn-copy { transition: all 0.3s; border: none; background: #333; color: white; border-radius: 4px; }
+  </style>
+
   <script>
-    // 1. CONFIGURACIÓN CENTRALIZADA
     window.VEGASBETT_CONFIG = {
       ATENCION: {
         CLARA: { nombre: "Clara", numero: "5492236631329", inicio: 8, fin: 20 },
@@ -17,105 +36,94 @@
       TITULAR: "Priscila Correa",
       MIN_NUEVO: 1000,
       MIN_PROMO_DIA: 4000,
-      // Configuración de bonos por día (0: Domingo, 1: Lunes, etc.)
       PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
     function enviarCarga() {
         const ahora = new Date();
-        const hora = ahora.getHours();
-        const diaSemana = ahora.getDay(); // 0 a 6
         const config = window.VEGASBETT_CONFIG;
-        const turnos = config.ATENCION;
-        const DIAS_NOMBRES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-        
-        // Detectar encargado por horario
-        const encargado = (hora >= turnos.CLARA.inicio && hora < turnos.CLARA.fin) ? turnos.CLARA : turnos.JULI;
-        
+        const encargado = (ahora.getHours() >= config.ATENCION.CLARA.inicio && ahora.getHours() < config.ATENCION.CLARA.fin) ? config.ATENCION.CLARA : config.ATENCION.JULI;
         const nombre = document.getElementById('nombre').value.trim();
-        const montoStr = document.getElementById('monto').value;
-        const monto = parseInt(montoStr);
-        
+        const monto = parseInt(document.getElementById('monto').value);
         const urlParams = new URLSearchParams(window.location.search);
         const esNuevo = urlParams.get('promo') === 'new';
         const esPromoDia = urlParams.get('promo') === 'today';
 
-        if(!nombre || !montoStr) { 
-            alert("Por favor completá tu nombre y el monto."); 
-            return; 
-        }
+        if(!nombre || !monto) { alert("Por favor completá los datos."); return; }
 
-        // --- VALIDACIONES DE MÍNIMOS ---
-        if (esNuevo && monto < config.MIN_NUEVO) {
-            alert("El monto mínimo para el Bono de Bienvenida (35%) es de $" + config.MIN_NUEVO);
-            return;
-        }
-        if (esPromoDia && monto < config.MIN_PROMO_DIA) {
-            alert("El monto mínimo para el Bono del Día es de $" + config.MIN_PROMO_DIA);
-            return;
-        }
-
-        // --- CONSTRUCCIÓN DEL MENSAJE INTELIGENTE ---
-        let mensaje = "Hola " + encargado.nombre + ", soy *" + nombre + "*.\n";
-        
+        let mensaje = `Hola ${encargado.nombre}, soy *${nombre}*.\n`;
         if (esPromoDia) {
-            const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
-            const nombreDia = DIAS_NOMBRES[diaSemana];
-            mensaje += "Quiero cargar $" + monto + " con mi *" + bonoHoy + "% de Bono del Día " + nombreDia + "* 🚀";
+            const bono = config.PROMO_BONUS_BY_DAY[ahora.getDay()];
+            mensaje += `Quiero cargar $${monto} con el *Bono del Día ${bono}%* 🚀`;
         } else if (esNuevo) {
-            mensaje += "Quiero cargar $" + monto + " y solicitar mi *Bono de Bienvenida del 35%* 🎁";
+            mensaje += `Quiero cargar $${monto} con mi *Bono de Bienvenida 35%* 🎁`;
         } else {
-            mensaje += "Quiero *CARGAR* $" + monto + ".";
+            mensaje += `Quiero *CARGAR* $${monto}.`;
         }
-        
-        mensaje += "\n\nEnvío el comprobante a continuación.";
-
-        window.open("https://wa.me/" + encargado.numero + "?text=" + encodeURIComponent(mensaje), "_blank");
+        window.open(`https://wa.me/${encargado.numero}?text=${encodeURIComponent(mensaje + "\n\nEnvío comprobante.")}`, "_blank");
     }
 
-    function copiar(id) {
+    function copiar(id, btn) {
         const text = id === 'cbu' ? window.VEGASBETT_CONFIG.CBU : window.VEGASBETT_CONFIG.ALIAS;
-        navigator.clipboard.writeText(text).then(() => alert("Copiado: " + text));
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "✅ ¡Copiado!";
+            btn.style.background = "#25D366";
+            setTimeout(() => { btn.innerHTML = originalText; btn.style.background = ""; }, 2000);
+        });
     }
 
+    // Lógica de Calculadora y Social Proof
     window.addEventListener('DOMContentLoaded', () => {
         const config = window.VEGASBETT_CONFIG;
-        const ahora = new Date();
-        const diaSemana = ahora.getDay();
-        
-        // Actualizar datos bancarios visuales
         document.getElementById('display-titular').textContent = config.TITULAR;
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
-        // Aviso dinámico de mínimos en pantalla
-        const urlParams = new URLSearchParams(window.location.search);
-        const aviso = document.getElementById('avisoMinimo');
-        if (urlParams.get('promo') === 'new') {
-            aviso.textContent = "Bono 35% Activo (Mínimo $" + config.MIN_NUEVO + ")";
-            aviso.style.display = "block";
-        } else if (urlParams.get('promo') === 'today') {
-            const bonoHoy = config.PROMO_BONUS_BY_DAY[diaSemana];
-            aviso.textContent = "Bono del Día +" + bonoHoy + "% Activo (Mínimo $" + config.MIN_PROMO_DIA + ")";
-            aviso.style.display = "block";
-        }
+        // Calculadora en tiempo real
+        document.getElementById('monto').addEventListener('input', (e) => {
+            const monto = parseInt(e.target.value) || 0;
+            const urlParams = new URLSearchParams(window.location.search);
+            let porc = urlParams.get('promo') === 'new' ? 35 : (urlParams.get('promo') === 'today' ? config.PROMO_BONUS_BY_DAY[new Date().getDay()] : 0);
+            
+            const aviso = document.getElementById('avisoMinimo');
+            if (monto > 0 && porc > 0) {
+                aviso.style.display = "block";
+                aviso.innerHTML = `Carga: $${monto} + Bono: $${Math.floor(monto*(porc/100))} <br> <strong>Créditos a recibir: $${monto + Math.floor(monto*(porc/100))}</strong>`;
+            }
+        });
+
+        // Social Proof (Simulador de actividad)
+        const nombres = ["Marcos", "Facu", "Dany", "Clari", "Gabi", "Santi", "Pato", "Lu"];
+        const acciones = ["cargó $3.000", "retiró $12.400", "cargó $1.500", "solicitó bono 35%", "cargó $10.000"];
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const sp = document.getElementById('social-proof');
+                sp.innerHTML = `🟢 <strong>${nombres[Math.floor(Math.random()*nombres.length)]}</strong> ${acciones[Math.floor(Math.random()*acciones.length)]}`;
+                sp.style.display = "block";
+                setTimeout(() => sp.style.display = "none", 4000);
+            }
+        }, 8000);
     });
   </script>
 </head>
 <body>
+  <div id="social-proof"></div>
   <div class="container">
     <div class="card">
       <h2 class="center">Cargar Créditos</h2>
-      <p id="avisoMinimo" class="center" style="display:none; background: #c29c36; color: #000; padding: 5px; border-radius: 4px; font-weight: bold; font-size: 13px; margin-bottom: 10px;"></p>
+      <p id="avisoMinimo" class="center" style="display:none; background: #c29c36; color: #000; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px;"></p>
       
       <div class="form">
         <input type="text" id="nombre" placeholder="Tu nombre de usuario"/>
-        <input type="number" id="monto" placeholder="Monto a cargar (ej: 5000)"/>
+        <input type="number" id="monto" placeholder="Monto a cargar"/>
         
-        <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #333; font-size: 14px;">
-            <p><strong>Titular:</strong> <span id="display-titular">Cargando...</span></p>
-            <p style="margin: 10px 0;"><strong>Alias:</strong> <span id="display-alias" style="color: #c29c36;">Cargando...</span> <button class="btn-copy" onclick="copiar('alias')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
-            <p><strong>CBU:</strong> <span id="display-cbu" style="color: #c29c36;">Cargando...</span> <button class="btn-copy" onclick="copiar('cbu')" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Copiar</button></p>
+        <div class="bank-info" style="background: #1e2029; padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid #333;">
+            <p><strong>Titular:</strong> <span id="display-titular"></span></p>
+            <p style="margin: 12px 0;"><strong>Alias:</strong> <span id="display-alias" style="color: #d4af37; font-weight: bold;"></span> 
+               <button class="btn-copy" onclick="copiar('alias', this)">Copiar</button></p>
+            <p><strong>CBU:</strong> <span id="display-cbu" style="color: #d4af37; font-weight: bold;"></span> 
+               <button class="btn-copy" onclick="copiar('cbu', this)">Copiar</button></p>
         </div>
 
         <button class="btn ok" onclick="enviarCarga()">Informar Carga por WhatsApp</button>

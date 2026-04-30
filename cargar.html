@@ -33,7 +33,6 @@
       TITULAR: "Priscila Correa",
       MIN_NUEVO: 1000,
       MIN_PROMO_DIA: 4000,
-      // 0: Dom, 1: Lun, 2: Mar, 3: Mie, 4: Jue, 5: Vie, 6: Sab
       PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
@@ -51,6 +50,7 @@
 
         let mensaje = `Hola ${encargado.nombre}, soy *${nombre}*.\n`;
         
+        // Lógica de mensaje de WhatsApp
         if (tipoPromo === 'today') {
             const bono = config.PROMO_BONUS_BY_DAY[ahora.getDay()];
             mensaje += `Quiero cargar $${monto} con mi *Bono del Día ${bono}%* 🚀`;
@@ -79,7 +79,6 @@
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
-        // CALCULADORA CORREGIDA
         document.getElementById('monto').addEventListener('input', (e) => {
             const monto = parseInt(e.target.value) || 0;
             const urlParams = new URLSearchParams(window.location.search);
@@ -93,6 +92,7 @@
             }
 
             const aviso = document.getElementById('avisoMinimo');
+            // Si hay promo activa, mostramos el cálculo. Si es carga normal, lo ocultamos.
             if (monto > 0 && porcentaje > 0) {
                 const extra = Math.floor(monto * (porcentaje / 100));
                 aviso.style.display = "block";
@@ -121,6 +121,7 @@
   <div class="container">
     <div class="card">
       <h2 class="center">Cargar Créditos</h2>
+      <!-- El banner solo se activa si hay un bono detectado -->
       <p id="avisoMinimo" class="center" style="display:none; background: #c29c36; color: #000; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px;"></p>
       
       <div class="form">

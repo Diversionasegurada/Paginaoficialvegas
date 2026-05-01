@@ -8,6 +8,22 @@
   <style>
     .btn-copy { transition: all 0.3s; border: none; background: #333; color: white; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
     #avisoMinimo { transition: all 0.3s ease; border-left: 5px solid #000; }
+    
+    /* Estilo para las notificaciones de actividad */
+    #social-proof {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(13, 22, 33, 0.95);
+      border: 1px solid #d4af37;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 9999;
+    }
   </style>
 
   <script>
@@ -19,8 +35,8 @@
       CBU: "0000003100056935839518",
       ALIAS: "vegass.bet",
       TITULAR: "Priscila Correa",
-      MIN_GRAL: 1000,      // Mínimo para carga normal y bienvenida
-      MIN_PROMO_DIA: 4000,  // Mínimo para el bono del día
+      MIN_GRAL: 1000,
+      MIN_PROMO_DIA: 4000,
       PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
@@ -36,7 +52,6 @@
 
         if(!nombre) { alert("Por favor, ingresá tu nombre de usuario."); return; }
 
-        // --- RESTRICCIONES DE MONTO ---
         if (tipoPromo === 'today') {
             if (monto < config.MIN_PROMO_DIA) {
                 alert(`❌ El monto mínimo para el Bono del Día es de $${config.MIN_PROMO_DIA}.`);
@@ -50,7 +65,6 @@
         }
 
         let mensaje = `Hola ${encargado.nombre}, soy *${nombre}*.\n`;
-        
         if (tipoPromo === 'today') {
             const bono = config.PROMO_BONUS_BY_DAY[ahora.getDay()];
             mensaje += `Quiero cargar $${monto} con mi *Bono del Día ${bono}%* 🚀`;
@@ -79,6 +93,7 @@
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
+        // Lógica de la calculadora y validación visual
         document.getElementById('monto').addEventListener('input', (e) => {
             const monto = parseInt(e.target.value) || 0;
             const urlParams = new URLSearchParams(window.location.search);
@@ -113,10 +128,37 @@
                 aviso.style.display = "none";
             }
         });
+
+        // Social Proof - Notificaciones de Actividad
+        const historialActividad = [
+            { n: "Carlos88", a: "cargó $5.000" },
+            { n: "Julieta_Vip", a: "cargó $4.000" },
+            { n: "Sole_Mardel", a: "cargó $10.000" },
+            { n: "Fran.Casinos", a: "retiró $15.500" },
+            { n: "Lucas_P", a: "cargó $2.500" },
+            { n: "Matias_Ok", a: "cargó $7.000" },
+            { n: "Gaby_Vegas", a: "retiró $22.000" },
+            { n: "Romeli_26", a: "cargó $5.000" },
+            { n: "Nico_MDQ", a: "cargó $3.500" },
+            { n: "Claudio.Slot", a: "retiró $12.300" }
+        ];
+
+        setInterval(() => {
+            if (Math.random() > 0.3) { 
+                const sp = document.getElementById('social-proof');
+                const item = historialActividad[Math.floor(Math.random() * historialActividad.length)];
+                sp.innerHTML = `🟢 <strong>${item.n}</strong> ${item.a} hace un instante`;
+                sp.style.display = "block";
+                setTimeout(() => { sp.style.display = "none"; }, 5000);
+            }
+        }, 12000);
     });
   </script>
 </head>
 <body>
+  <!-- Elemento para las notificaciones -->
+  <div id="social-proof"></div>
+
   <div class="container">
     <div class="card">
       <h2 class="center">Cargar Créditos</h2>

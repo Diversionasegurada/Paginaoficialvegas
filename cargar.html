@@ -93,7 +93,6 @@
         document.getElementById('display-alias').textContent = config.ALIAS;
         document.getElementById('display-cbu').textContent = config.CBU;
 
-        // Lógica de la calculadora y validación visual
         document.getElementById('monto').addEventListener('input', (e) => {
             const monto = parseInt(e.target.value) || 0;
             const urlParams = new URLSearchParams(window.location.search);
@@ -129,26 +128,30 @@
             }
         });
 
-        // Social Proof - Notificaciones de Actividad
-        const historialActividad = [
-            { n: "Carlos88", a: "cargó $5.000" },
-            { n: "Julieta_Vip", a: "cargó $4.000" },
-            { n: "Sole_Mardel", a: "cargó $10.000" },
-            { n: "Fran.Casinos", a: "retiró $15.500" },
-            { n: "Lucas_P", a: "cargó $2.500" },
-            { n: "Matias_Ok", a: "cargó $7.000" },
-            { n: "Gaby_Vegas", a: "retiró $22.000" },
-            { n: "Romeli_26", a: "cargó $5.000" },
-            { n: "Nico_MDQ", a: "cargó $3.500" },
-            { n: "Claudio.Slot", a: "retiró $12.300" }
-        ];
+        // Social Proof - Generador Automático de Nombres (fer7688b)
+        const prefijos = ["fer", "claudio", "sofi", "mati", "gaby", "lucas", "pau", "fran", "nico", "agus"];
+        const letrasFinales = ["b", "v"];
 
         setInterval(() => {
             if (Math.random() > 0.3) { 
                 const sp = document.getElementById('social-proof');
-                const item = historialActividad[Math.floor(Math.random() * historialActividad.length)];
-                sp.innerHTML = `🟢 <strong>${item.n}</strong> ${item.a} hace un instante`;
+                
+                // Generar nombre: prefijo + 4 números + letra final
+                const prefijo = prefijos[Math.floor(Math.random() * prefijos.length)];
+                const numeros = Math.floor(1000 + Math.random() * 9000);
+                const letra = letrasFinales[Math.floor(Math.random() * letrasFinales.length)];
+                const nombreFake = `${prefijo}${numeros}${letra}`;
+                
+                // Generar acción y monto
+                const esCarga = Math.random() > 0.3;
+                const accion = esCarga ? "cargó" : "retiró";
+                const monto = esCarga 
+                    ? (Math.floor(Math.random() * 10) + 1) * 1000 
+                    : (Math.floor(Math.random() * 15) + 5) * 1000;
+                
+                sp.innerHTML = `🟢 <strong>${nombreFake}</strong> ${accion} $${monto.toLocaleString()} hace un instante`;
                 sp.style.display = "block";
+                
                 setTimeout(() => { sp.style.display = "none"; }, 5000);
             }
         }, 12000);
@@ -156,7 +159,6 @@
   </script>
 </head>
 <body>
-  <!-- Elemento para las notificaciones -->
   <div id="social-proof"></div>
 
   <div class="container">

@@ -4,22 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cargar — VegasBett</title>
-  <link rel="stylesheet" href="assets/styles.css?v=18"/>
+  <link rel="stylesheet" href="assets/styles.css?v=21"/>
   <style>
-    #social-proof {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: rgba(13, 22, 33, 0.95);
-      border: 1px solid #d4af37;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      display: none;
-      z-index: 9999;
-    }
     .btn-copy { transition: all 0.3s; border: none; background: #333; color: white; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+    #avisoMinimo { transition: all 0.3s ease; border-left: 5px solid #000; }
   </style>
 
   <script>
@@ -31,8 +19,8 @@
       CBU: "0000003100056935839518",
       ALIAS: "vegass.bet",
       TITULAR: "Priscila Correa",
-      MIN_NUEVO: 1000,
-      MIN_PROMO_DIA: 4000,
+      MIN_GRAL: 1000,      // Mínimo para carga normal y bienvenida
+      MIN_PROMO_DIA: 4000,  // Mínimo para el bono del día
       PROMO_BONUS_BY_DAY: { 0: 10, 1: 5, 2: 10, 3: 5, 4: 5, 5: 10, 6: 10 }
     };
 
@@ -41,16 +29,28 @@
         const config = window.VEGASBETT_CONFIG;
         const encargado = (ahora.getHours() >= config.ATENCION.CLARA.inicio && ahora.getHours() < config.ATENCION.CLARA.fin) ? config.ATENCION.CLARA : config.ATENCION.JULI;
         const nombre = document.getElementById('nombre').value.trim();
-        const monto = parseInt(document.getElementById('monto').value);
+        const monto = parseInt(document.getElementById('monto').value) || 0;
         
         const urlParams = new URLSearchParams(window.location.search);
         const tipoPromo = urlParams.get('promo');
 
-        if(!nombre || !monto) { alert("Por favor completá los datos."); return; }
+        if(!nombre) { alert("Por favor, ingresá tu nombre de usuario."); return; }
+
+        // --- RESTRICCIONES DE MONTO ---
+        if (tipoPromo === 'today') {
+            if (monto < config.MIN_PROMO_DIA) {
+                alert(`❌ El monto mínimo para el Bono del Día es de $${config.MIN_PROMO_DIA}.`);
+                return;
+            }
+        } else {
+            if (monto < config.MIN_GRAL) {
+                alert(`❌ El monto mínimo de carga es de $${config.MIN_GRAL}.`);
+                return;
+            }
+        }
 
         let mensaje = `Hola ${encargado.nombre}, soy *${nombre}*.\n`;
         
-        // Lógica de mensaje de WhatsApp
         if (tipoPromo === 'today') {
             const bono = config.PROMO_BONUS_BY_DAY[ahora.getDay()];
             mensaje += `Quiero cargar $${monto} con mi *Bono del Día ${bono}%* 🚀`;
@@ -83,46 +83,44 @@
             const monto = parseInt(e.target.value) || 0;
             const urlParams = new URLSearchParams(window.location.search);
             const tipoPromo = urlParams.get('promo');
+            const aviso = document.getElementById('avisoMinimo');
             
             let porcentaje = 0;
+            let minimoRequerido = config.MIN_GRAL;
+
             if (tipoPromo === 'new') {
                 porcentaje = 35;
             } else if (tipoPromo === 'today') {
                 porcentaje = config.PROMO_BONUS_BY_DAY[new Date().getDay()];
+                minimoRequerido = config.MIN_PROMO_DIA;
             }
 
-            const aviso = document.getElementById('avisoMinimo');
-            // Si hay promo activa, mostramos el cálculo. Si es carga normal, lo ocultamos.
-            if (monto > 0 && porcentaje > 0) {
-                const extra = Math.floor(monto * (porcentaje / 100));
+            if (monto > 0) {
                 aviso.style.display = "block";
-                aviso.innerHTML = `Carga: $${monto} + Bono (${porcentaje}%): $${extra} <br> <strong>Créditos a recibir: $${monto + extra}</strong>`;
+                if (monto < minimoRequerido) {
+                    aviso.style.background = "#ff4444";
+                    aviso.style.color = "#fff";
+                    aviso.innerHTML = `⚠️ El mínimo para esta carga es $${minimoRequerido}`;
+                } else if (porcentaje > 0) {
+                    const extra = Math.floor(monto * (porcentaje / 100));
+                    aviso.style.background = "#c29c36";
+                    aviso.style.color = "#000";
+                    aviso.innerHTML = `Carga: $${monto} + Bono (${porcentaje}%): $${extra} <br> <strong>Créditos a recibir: $${monto + extra}</strong>`;
+                } else {
+                    aviso.style.display = "none";
+                }
             } else {
                 aviso.style.display = "none";
             }
         });
-
-        // Social Proof
-        const nombres = ["Marcos", "Lucas", "Damián", "Claudio", "Gaby", "Santi", "Patricio", "Luis"];
-        const acciones = ["cargó $3.000", "retiró $15.400", "cargó $1.500", "cargó $10.000", "retiró $8.200"];
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                const sp = document.getElementById('social-proof');
-                sp.innerHTML = `🟢 <strong>${nombres[Math.floor(Math.random()*nombres.length)]}</strong> ${acciones[Math.floor(Math.random()*acciones.length)]}`;
-                sp.style.display = "block";
-                setTimeout(() => sp.style.display = "none", 4000);
-            }
-        }, 9000);
     });
   </script>
 </head>
 <body>
-  <div id="social-proof"></div>
   <div class="container">
     <div class="card">
       <h2 class="center">Cargar Créditos</h2>
-      <!-- El banner solo se activa si hay un bono detectado -->
-      <p id="avisoMinimo" class="center" style="display:none; background: #c29c36; color: #000; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px;"></p>
+      <p id="avisoMinimo" class="center" style="display:none; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px;"></p>
       
       <div class="form">
         <input type="text" id="nombre" placeholder="Tu nombre de usuario"/>
